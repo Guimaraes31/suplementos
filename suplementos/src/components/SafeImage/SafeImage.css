@@ -1,0 +1,8 @@
+.safe-image {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.safe-image--loaded {
+  opacity: 1;
+}
