@@ -1,4 +1,5 @@
 import BrandLogo from '../BrandLogo/BrandLogo'
+import { storeConfig } from '../../config/store'
 import './Footer.css'
 
 const navLinks = [
@@ -49,10 +50,10 @@ export default function Footer() {
               Suplementos premium de alta performance. Qualidade, confiança e resultados — Zona Sul, São Paulo.
             </p>
             <div className="footer__social">
-              <a href="#" className="footer__social-link" aria-label="Instagram">
+              <a href={storeConfig.instagram} className="footer__social-link" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
                 <InstagramIcon />
               </a>
-              <a href="#" className="footer__social-link" aria-label="WhatsApp">
+              <a href={`https://wa.me/${storeConfig.whatsapp}`} className="footer__social-link" aria-label="WhatsApp" target="_blank" rel="noopener noreferrer">
                 <WhatsAppIcon />
               </a>
             </div>
@@ -83,15 +84,17 @@ export default function Footer() {
           <div>
             <h3 className="footer__column-title">Contato</h3>
             <address className="footer__address">
-              <strong>São Paulo — Zona Sul</strong>
-              Av. Ibirapuera, 2907 — Moema
+              <strong>Nascimento Suplementos</strong>
+              Rua Henrique Guilherme Nicolini, 126
               <br />
-              São Paulo, SP — 04029-200
+              Jardim São Carlos — São Paulo, SP
               <br />
               <br />
-              contato@nascimentosuplementos.com.br
+              {storeConfig.pixKey}
               <br />
-              (11) 3456-7890
+              {storeConfig.whatsappDisplay}
+              <br />
+              {storeConfig.instagramHandle}
             </address>
           </div>
         </div>
