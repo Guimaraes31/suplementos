@@ -26,6 +26,12 @@ export const images = {
     packs: '/images/categories/packs.jpg',
   },
 
+  /** Potes premium hero (removebg: Btg5M creatina / H5q45 whey) */
+  heroProducts: {
+    creatina: '/images/hero-products/creatina-hero.png',
+    whey: '/images/hero-products/whey-hero.png',
+  },
+
   products: {
     /** Whey isolate — pote branco com scoop */
     wheyGold: '/images/products/whey-gold.jpg',

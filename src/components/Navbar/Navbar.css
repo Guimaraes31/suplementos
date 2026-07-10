@@ -244,20 +244,20 @@
 .navbar__mobile-backdrop {
   position: fixed;
   inset: 0;
-  top: var(--nav-height);
+  top: var(--site-top-height);
   background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
-  z-index: 999;
+  z-index: 998;
 }
 
 .navbar__mobile-menu {
   position: fixed;
-  top: var(--nav-height);
+  top: var(--site-top-height);
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 1000;
+  z-index: 1001;
   background: linear-gradient(180deg, rgba(14, 14, 14, 0.98) 0%, rgba(10, 10, 10, 0.99) 100%);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);

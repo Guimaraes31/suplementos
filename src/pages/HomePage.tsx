@@ -1,4 +1,4 @@
-import Hero from '../components/Hero/Hero'
+import HeroCarousel from '../components/HeroCarousel/HeroCarousel'
 import TrustBar from '../components/TrustBar/TrustBar'
 import MaisVendidos from '../components/MaisVendidos/MaisVendidos'
 import Benefits from '../components/Benefits/Benefits'
@@ -16,7 +16,7 @@ export default function HomePage() {
 
   return (
     <>
-      <Hero />
+      <HeroCarousel />
       <TrustBar />
       <SectionDivider label="Mais Vendidos" />
       <MaisVendidos />

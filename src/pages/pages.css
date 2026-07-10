@@ -2,8 +2,12 @@
   min-height: 60vh;
 }
 
+.page-main--with-announce {
+  padding-top: var(--site-top-height);
+}
+
 .page-section {
-  padding-top: calc(var(--nav-height) + var(--space-lg));
+  padding-top: calc(var(--site-top-height) + var(--space-lg));
   padding-bottom: var(--space-2xl);
 }
 

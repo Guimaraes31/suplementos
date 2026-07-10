@@ -1,6 +1,7 @@
 import { Outlet, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
 import Navbar from '../Navbar/Navbar'
+import AnnouncementBar from '../AnnouncementBar/AnnouncementBar'
 import Footer from '../Footer/Footer'
 import CartDrawer from '../CartDrawer/CartDrawer'
 import CheckoutModal from '../CheckoutModal/CheckoutModal'
@@ -32,7 +33,8 @@ export default function Layout() {
     <>
       <ScrollProgress />
       <Navbar />
-      <main className="page-main">
+      <AnnouncementBar />
+      <main className="page-main page-main--with-announce">
         <Outlet />
       </main>
       <Footer />

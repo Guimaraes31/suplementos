@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hero Carousel + Announcement Bar — Growth Style</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink: '#0A0A0A',
+            panel: '#111111',
+            gold: '#C5A46E',
+            goldDeep: '#8B6F47',
+            mute: '#B8B8B8',
+          },
+          fontFamily: {
+            sans: ['system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    /* ===== Announcement Bar ===== */
+    .announce {
+      background: linear-gradient(90deg, #0A0A0A 0%, #1a1510 40%, #0A0A0A 100%);
+      border-bottom: 1px solid rgba(197, 164, 110, 0.28);
+    }
+    .announce__track {
+      display: flex;
+      width: max-content;
+      animation: announce-marquee 28s linear infinite;
+    }
+    .announce:hover .announce__track,
+    .announce:focus-within .announce__track {
+      animation-play-state: paused;
+    }
+    @keyframes announce-marquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+    .announce__item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0 1.75rem;
+      white-space: nowrap;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #E8E8E8;
+    }
+    .announce__item strong {
+      color: #C5A46E;
+      font-weight: 700;
+    }
+    .announce__dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: #C5A46E;
+      opacity: 0.7;
+      flex-shrink: 0;
+    }
+
+    /* ===== Hero Carousel ===== */
+    .hero-carousel {
+      position: relative;
+      isolation: isolate;
+      background: #0A0A0A;
+      overflow: hidden;
+    }
+    .hero-carousel__viewport {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      min-height: 420px;
+      max-height: min(78vh, 720px);
+    }
+    @media (min-width: 768px) {
+      .hero-carousel__viewport {
+        aspect-ratio: 21 / 9;
+        min-height: 480px;
+      }
+    }
+    .hero-slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.7s;
+      pointer-events: none;
+    }
+    .hero-slide.is-active {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      z-index: 1;
+    }
+    .hero-slide__media {
+      position: absolute;
+      inset: 0;
+    }
+    .hero-slide__media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      transform: scale(1.04);
+      transition: transform 6.5s ease-out;
+    }
+    .hero-slide.is-active .hero-slide__media img {
+      transform: scale(1);
+    }
+    .hero-slide__shade {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(10,10,10,0.92) 0%, rgba(10,10,10,0.55) 48%, rgba(10,10,10,0.35) 100%),
+        linear-gradient(180deg, rgba(10,10,10,0.2) 0%, rgba(10,10,10,0.75) 100%);
+    }
+    .hero-slide__content {
+      position: relative;
+      z-index: 2;
+      height: 100%;
+      display: flex;
+      align-items: flex-end;
+      padding: 1.5rem 1.25rem 4.5rem;
+    }
+    @media (min-width: 768px) {
+      .hero-slide__content {
+        align-items: center;
+        padding: 2.5rem 3rem 3rem;
+      }
+    }
+    .hero-slide__inner {
+      max-width: 36rem;
+      transform: translateY(12px);
+      opacity: 0;
+      transition: transform 0.65s 0.12s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.65s 0.12s;
+    }
+    .hero-slide.is-active .hero-slide__inner {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-bottom: 0.85rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      border: 1px solid rgba(197, 164, 110, 0.45);
+      background: rgba(197, 164, 110, 0.12);
+      color: #C5A46E;
+      font-size: 0.6875rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .hero-title {
+      font-size: clamp(1.85rem, 5.5vw, 3.35rem);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      color: #fff;
+      margin-bottom: 0.75rem;
+      text-wrap: balance;
+    }
+    .hero-title em {
+      font-style: normal;
+      color: #C5A46E;
+    }
+    .hero-sub {
+      font-size: clamp(0.9375rem, 2.2vw, 1.125rem);
+      font-weight: 400;
+      line-height: 1.55;
+      color: #B8B8B8;
+      margin-bottom: 1.35rem;
+      max-width: 32rem;
+    }
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      min-height: 48px;
+      padding: 0.85rem 1.5rem;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #C5A46E 0%, #8B6F47 100%);
+      color: #0A0A0A;
+      font-size: 0.8125rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 10px 30px -10px rgba(197, 164, 110, 0.55);
+    }
+    .hero-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 36px -10px rgba(197, 164, 110, 0.7);
+    }
+    .hero-cta:focus-visible {
+      outline: 2px solid #C5A46E;
+      outline-offset: 3px;
+    }
+
+    .hero-nav {
+      position: absolute;
+      z-index: 5;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(10,10,10,0.55);
+      backdrop-filter: blur(8px);
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s, transform 0.2s;
+    }
+    .hero-nav:hover {
+      background: rgba(197, 164, 110, 0.2);
+      border-color: rgba(197, 164, 110, 0.5);
+    }
+    .hero-nav:focus-visible {
+      outline: 2px solid #C5A46E;
+      outline-offset: 2px;
+    }
+    .hero-nav--prev { left: 0.75rem; }
+    .hero-nav--next { right: 0.75rem; }
+    @media (min-width: 768px) {
+      .hero-nav--prev { left: 1.25rem; }
+      .hero-nav--next { right: 1.25rem; }
+    }
+
+    .hero-dots {
+      position: absolute;
+      z-index: 5;
+      left: 50%;
+      bottom: 1.15rem;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .hero-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      border: none;
+      padding: 0;
+      background: rgba(255,255,255,0.28);
+      cursor: pointer;
+      transition: width 0.3s ease, background 0.3s ease;
+    }
+    .hero-dot.is-active {
+      width: 28px;
+      background: #C5A46E;
+    }
+    .hero-dot:focus-visible {
+      outline: 2px solid #C5A46E;
+      outline-offset: 3px;
+    }
+
+    .hero-progress {
+      position: absolute;
+      z-index: 6;
+      left: 0;
+      bottom: 0;
+      height: 2px;
+      width: 100%;
+      background: rgba(255,255,255,0.08);
+    }
+    .hero-progress__bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #8B6F47, #C5A46E);
+      transform-origin: left;
+    }
+    .hero-carousel.is-playing .hero-progress__bar {
+      animation: hero-progress 5s linear forwards;
+    }
+    @keyframes hero-progress {
+      from { width: 0%; }
+      to { width: 100%; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .announce__track { animation: none; }
+      .hero-slide,
+      .hero-slide__inner,
+      .hero-slide__media img { transition: none; }
+      .hero-carousel.is-playing .hero-progress__bar { animation: none; width: 100%; }
+    }
+  </style>
+</head>
+<body class="bg-ink text-white min-h-screen">
+
+  <!-- Demo header (substitua pelo seu) -->
+  <header class="sticky top-0 z-50 bg-ink/95 backdrop-blur border-b border-white/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-14 sm:h-16 flex items-center justify-between">
+      <span class="font-bold tracking-tight text-sm sm:text-base">Nascimento <span class="text-gold">Suplementos</span></span>
+      <a href="#loja" class="text-xs sm:text-sm text-mute hover:text-gold transition">Loja</a>
+    </div>
+  </header>
+
+  <!-- =========================================================
+       1) ANNOUNCEMENT BAR — cole logo abaixo do header
+       ========================================================= -->
+  <div class="announce" role="region" aria-label="Promoções" data-announce>
+    <div class="overflow-hidden py-2.5">
+      <div class="announce__track" aria-hidden="false">
+        <!-- grupo 1 -->
+        <span class="announce__item"><strong>Frete grátis</strong> acima de R$ 199 na Zona Sul</span>
+        <span class="announce__dot" aria-hidden="true"></span>
+        <span class="announce__item">Cupom <strong>NASCIMENTO10</strong> · 10% na 1ª compra</span>
+        <span class="announce__dot" aria-hidden="true"></span>
+        <span class="announce__item"><strong>Creatina</strong> em destaque · peça orientação no WhatsApp</span>
+        <span class="announce__dot" aria-hidden="true"></span>
+        <span class="announce__item">Whey + creatina · <strong>combo inteligente</strong></span>
+        <span class="announce__dot" aria-hidden="true"></span>
+        <span class="announce__item">Retire na loja · Jardim São Carlos</span>
+        <span class="announce__dot" aria-hidden="true"></span>
+        <!-- grupo 2 (duplicado p/ loop infinito) -->
+        <span class="announce__item"><strong>Frete grátis</strong> acima de R$ 199 na Zona Sul</span>
+        <span class="announce__dot" aria-hidden="true"></span>
+        <span class="announce__item">Cupom <strong>NASCIMENTO10</strong> · 10% na 1ª compra</span>
+        <span class="announce__dot" aria-hidden="true"></span>
+        <span class="announce__item"><strong>Creatina</strong> em destaque · peça orientação no WhatsApp</span>
+        <span class="announce__dot" aria-hidden="true"></span>
+        <span class="announce__item">Whey + creatina · <strong>combo inteligente</strong></span>
+        <span class="announce__dot" aria-hidden="true"></span>
+        <span class="announce__item">Retire na loja · Jardim São Carlos</span>
+        <span class="announce__dot" aria-hidden="true"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       2) HERO CAROUSEL — banners grandes Growth-style
+       ========================================================= -->
+  <section
+    class="hero-carousel is-playing"
+    data-hero-carousel
+    data-interval="5000"
+    aria-roledescription="carousel"
+    aria-label="Campanhas em destaque"
+  >
+    <div class="hero-carousel__viewport">
+      <!-- Slide 1 -->
+      <article class="hero-slide is-active" data-slide aria-roledescription="slide" aria-label="1 de 4">
+        <div class="hero-slide__media">
+          <img
+            src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1800&q=80"
+            alt="Treino de força com foco em resultados"
+            width="1800"
+            height="900"
+            fetchpriority="high"
+          />
+          <div class="hero-slide__shade" aria-hidden="true"></div>
+        </div>
+        <div class="hero-slide__content">
+          <div class="hero-slide__inner max-w-7xl mx-auto w-full px-2 sm:px-6">
+            <span class="hero-badge">Lançamento · Performance</span>
+            <h2 class="hero-title">Whey de verdade.<br /><em>Sem chute na compra.</em></h2>
+            <p class="hero-sub">
+              Isolado e concentrado para o seu objetivo. Orientação antes de vender — monte o stack certo pro seu treino.
+            </p>
+            <a class="hero-cta" href="#loja?categoria=Whey%20Protein">
+              Ver whey protein
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Slide 2 -->
+      <article class="hero-slide" data-slide aria-roledescription="slide" aria-label="2 de 4" aria-hidden="true">
+        <div class="hero-slide__media">
+          <img
+            src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=1800&q=80"
+            alt="Creatina e força no treino"
+            width="1800"
+            height="900"
+            loading="lazy"
+          />
+          <div class="hero-slide__shade" aria-hidden="true"></div>
+        </div>
+        <div class="hero-slide__content">
+          <div class="hero-slide__inner max-w-7xl mx-auto w-full px-2 sm:px-6">
+            <span class="hero-badge">Mais pedido · Creatina</span>
+            <h2 class="hero-title">Creatina monohidratada.<br /><em>Base do shape.</em></h2>
+            <p class="hero-sub">
+              O clássico que não sai de moda. Tire dúvida de dose e rotina no WhatsApp — sem gastar à toa.
+            </p>
+            <a class="hero-cta" href="#loja?categoria=Creatina">
+              Ver creatinas
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Slide 3 -->
+      <article class="hero-slide" data-slide aria-roledescription="slide" aria-label="3 de 4" aria-hidden="true">
+        <div class="hero-slide__media">
+          <img
+            src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&w=1800&q=80"
+            alt="Entrega rápida de suplementos"
+            width="1800"
+            height="900"
+            loading="lazy"
+          />
+          <div class="hero-slide__shade" aria-hidden="true"></div>
+        </div>
+        <div class="hero-slide__content">
+          <div class="hero-slide__inner max-w-7xl mx-auto w-full px-2 sm:px-6">
+            <span class="hero-badge">Zona Sul · SP</span>
+            <h2 class="hero-title">Frete grátis*<br /><em>acima de R$ 199</em></h2>
+            <p class="hero-sub">
+              Pedido rápido para Jardim São Carlos e região. Prefere retirar? Combinamos no WhatsApp.
+            </p>
+            <a class="hero-cta" href="#loja">
+              Aproveitar agora
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Slide 4 -->
+      <article class="hero-slide" data-slide aria-roledescription="slide" aria-label="4 de 4" aria-hidden="true">
+        <div class="hero-slide__media">
+          <img
+            src="https://images.unsplash.com/photo-1581009146145-b5ef050c29e0?auto=format&fit=crop&w=1800&q=80"
+            alt="Combo whey e creatina"
+            width="1800"
+            height="900"
+            loading="lazy"
+          />
+          <div class="hero-slide__shade" aria-hidden="true"></div>
+        </div>
+        <div class="hero-slide__content">
+          <div class="hero-slide__inner max-w-7xl mx-auto w-full px-2 sm:px-6">
+            <span class="hero-badge">Cupom · 10% OFF</span>
+            <h2 class="hero-title">Combo whey + creatina.<br /><em>Use NASCIMENTO10</em></h2>
+            <p class="hero-sub">
+              Kit essencial para quem quer resultado com orientação. 10% na primeira compra com o cupom.
+            </p>
+            <a class="hero-cta" href="#loja?sort=mais-vendidos">
+              Montar meu kit
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <button type="button" class="hero-nav hero-nav--prev" data-hero-prev aria-label="Slide anterior">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M15 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button type="button" class="hero-nav hero-nav--next" data-hero-next aria-label="Próximo slide">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M9 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+
+      <div class="hero-dots" data-hero-dots role="tablist" aria-label="Selecionar slide"></div>
+      <div class="hero-progress" aria-hidden="true"><div class="hero-progress__bar" data-hero-progress></div></div>
+    </div>
+  </section>
+
+  <p class="max-w-7xl mx-auto px-4 py-6 text-xs text-mute">
+    *Frete grátis e cupom são exemplos de copy promocional — ajuste para as regras reais da loja. Arquivo demo: <code class="text-gold">public/growth-hero-announcement.html</code>
+  </p>
+
+  <script>
+    (function () {
+      'use strict';
+
+      const root = document.querySelector('[data-hero-carousel]');
+      if (!root) return;
+
+      const slides = Array.from(root.querySelectorAll('[data-slide]'));
+      const btnPrev = root.querySelector('[data-hero-prev]');
+      const btnNext = root.querySelector('[data-hero-next]');
+      const dotsWrap = root.querySelector('[data-hero-dots]');
+      const progress = root.querySelector('[data-hero-progress]');
+      const interval = Number(root.dataset.interval) || 5000;
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      let index = 0;
+      let timer = null;
+      let paused = false;
+
+      // Dots
+      slides.forEach((_, i) => {
+        const dot = document.createElement('button');
+        dot.type = 'button';
+        dot.className = 'hero-dot' + (i === 0 ? ' is-active' : '');
+        dot.setAttribute('role', 'tab');
+        dot.setAttribute('aria-label', 'Ir para slide ' + (i + 1));
+        dot.addEventListener('click', () => goTo(i, true));
+        dotsWrap.appendChild(dot);
+      });
+      const dots = Array.from(dotsWrap.children);
+
+      function paint() {
+        slides.forEach((slide, i) => {
+          const on = i === index;
+          slide.classList.toggle('is-active', on);
+          slide.setAttribute('aria-hidden', on ? 'false' : 'true');
+        });
+        dots.forEach((dot, i) => {
+          dot.classList.toggle('is-active', i === index);
+          dot.setAttribute('aria-selected', i === index ? 'true' : 'false');
+        });
+        restartProgress();
+      }
+
+      function restartProgress() {
+        if (!progress) return;
+        root.classList.remove('is-playing');
+        // reflow to restart CSS animation
+        void progress.offsetWidth;
+        if (!paused && !reduced) root.classList.add('is-playing');
+      }
+
+      function goTo(i, user) {
+        index = (i + slides.length) % slides.length;
+        paint();
+        if (user) restartAutoplay();
+      }
+
+      function next() { goTo(index + 1); }
+      function prev() { goTo(index - 1, true); }
+
+      function startAutoplay() {
+        stopAutoplay();
+        if (reduced || paused) return;
+        root.classList.add('is-playing');
+        timer = window.setInterval(next, interval);
+      }
+
+      function stopAutoplay() {
+        if (timer) {
+          window.clearInterval(timer);
+          timer = null;
+        }
+        root.classList.remove('is-playing');
+      }
+
+      function restartAutoplay() {
+        stopAutoplay();
+        if (!paused) startAutoplay();
+      }
+
+      btnNext?.addEventListener('click', () => goTo(index + 1, true));
+      btnPrev?.addEventListener('click', prev);
+
+      root.addEventListener('mouseenter', () => {
+        paused = true;
+        stopAutoplay();
+      });
+      root.addEventListener('mouseleave', () => {
+        paused = false;
+        startAutoplay();
+      });
+      root.addEventListener('focusin', () => {
+        paused = true;
+        stopAutoplay();
+      });
+      root.addEventListener('focusout', (e) => {
+        if (!root.contains(e.relatedTarget)) {
+          paused = false;
+          startAutoplay();
+        }
+      });
+
+      // Touch swipe
+      let touchX = null;
+      root.addEventListener('touchstart', (e) => {
+        touchX = e.changedTouches[0].clientX;
+        paused = true;
+        stopAutoplay();
+      }, { passive: true });
+      root.addEventListener('touchend', (e) => {
+        if (touchX == null) return;
+        const dx = e.changedTouches[0].clientX - touchX;
+        touchX = null;
+        if (Math.abs(dx) > 40) goTo(index + (dx < 0 ? 1 : -1), true);
+        paused = false;
+        startAutoplay();
+      }, { passive: true });
+
+      // Keyboard when focused
+      root.tabIndex = 0;
+      root.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') { e.preventDefault(); goTo(index + 1, true); }
+        if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
+      });
+
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) stopAutoplay();
+        else if (!paused) startAutoplay();
+      });
+
+      paint();
+      startAutoplay();
+    })();
+  </script>
+</body>
+</html>

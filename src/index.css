@@ -29,6 +29,8 @@
   --radius-lg: 12px;
 
   --nav-height: 80px;
+  --announce-height: 36px;
+  --site-top-height: calc(var(--nav-height) + var(--announce-height));
   --tap-target: 44px;
   --container-max: 1280px;
   --container-padding: clamp(1.25rem, 4vw, 3rem);
@@ -47,7 +49,7 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: var(--nav-height);
+  scroll-padding-top: var(--site-top-height);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
