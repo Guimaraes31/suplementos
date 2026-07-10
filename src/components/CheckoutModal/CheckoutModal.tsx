@@ -143,6 +143,11 @@ export default function CheckoutModal() {
                         Retirada na loja
                       </button>
                     </div>
+                    <p className="checkout__hint">
+                      {form.deliveryType === 'entrega'
+                        ? 'Entrega sob consulta no WhatsApp (prazo e frete conforme região, prioridade Zona Sul). Você também pode pedir no iFood.'
+                        : `Retire na loja em horário de funcionamento (${storeConfig.hoursDisplay}).`}
+                    </p>
                   </div>
 
                   {form.deliveryType === 'entrega' && (
@@ -161,10 +166,18 @@ export default function CheckoutModal() {
                   )}
 
                   {form.deliveryType === 'retirada' && (
-                    <p className="checkout__pix-hint" style={{ textAlign: 'left', marginTop: 0 }}>
-                      Retirada em: <strong>{storeConfig.address}</strong>
+                    <p className="checkout__hint">
+                      Endereço: <strong>{storeConfig.address}</strong>
                     </p>
                   )}
+
+                  <div className="checkout__field">
+                    <span className="checkout__label">Pagamento</span>
+                    <p className="checkout__hint">
+                      O pedido é confirmado no WhatsApp. Formas combinadas no atendimento — Pix é a mais comum.
+                      Valores de frete (se houver) e disponibilidade são confirmados antes de finalizar.
+                    </p>
+                  </div>
 
                   <div className="checkout__field">
                     <label className="checkout__label" htmlFor="checkout-notes">Observações (opcional)</label>
@@ -186,7 +199,7 @@ export default function CheckoutModal() {
 
                 <ul className="checkout__summary-list">
                   {items.map((item) => (
-                    <li key={item.productId} className="checkout__summary-item">
+                    <li key={item.lineId} className="checkout__summary-item">
                       <SafeImage
                         className="checkout__summary-thumb"
                         src={item.image}
@@ -212,31 +225,32 @@ export default function CheckoutModal() {
                   </div>
 
                   <button type="button" className="checkout__confirm-btn" onClick={handleConfirm}>
-                    Confirmar Pedido
+                    Enviar pedido no WhatsApp
                   </button>
+
+                  <p className="checkout__hint checkout__hint--center">
+                    Ao confirmar, abrimos o WhatsApp com o resumo do pedido. O carrinho do site é limpo em seguida —
+                    se fechar sem enviar a mensagem, chame a loja de novo.
+                  </p>
 
                   <div className="checkout__payment-links">
                     <a
-                      href={`https://wa.me/${storeConfig.whatsapp}?text=${encodeURIComponent(`Olá! Gostaria de pagar via Pix. Chave: ${storeConfig.pixKey}`)}`}
+                      href={`https://wa.me/${storeConfig.whatsapp}?text=${encodeURIComponent('Olá! Quero pagar um pedido via Pix.')}`}
                       className="checkout__payment-link"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      Pix
+                      Falar sobre Pix
                     </a>
                     <a
-                      href={storeConfig.mercadoPagoUrl}
+                      href={storeConfig.ifood}
                       className="checkout__payment-link"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      Mercado Pago
+                      Pedir no iFood
                     </a>
                   </div>
-
-                  <p className="checkout__pix-hint">
-                    Pix: <strong>{storeConfig.pixKey}</strong>
-                  </p>
                 </div>
               </aside>
             </motion.div>

@@ -7,7 +7,7 @@ export function formatPrice(value: number): string {
   return currencyFormatter.format(value)
 }
 
-export function formatInstallment(value: number, installments = 6): string {
-  const perInstallment = value / installments
-  return `${installments}x de ${currencyFormatter.format(perInstallment)} sem juros`
+/** Texto auxiliar de conversão — sem afirmar parcelamento que a loja não divulgou publicamente. */
+export function formatInstallment(_value: number, _installments = 6): string {
+  return 'Dúvida? Peça orientação no WhatsApp'
 }

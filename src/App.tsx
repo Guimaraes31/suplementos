@@ -1,36 +1,23 @@
-import Navbar from './components/Navbar/Navbar'
-import Hero from './components/Hero/Hero'
-import TrustBar from './components/TrustBar/TrustBar'
-import Categorias from './components/Categorias/Categorias'
-import Shop from './components/Shop/Shop'
-import MaisVendidos from './components/MaisVendidos/MaisVendidos'
-import Benefits from './components/Benefits/Benefits'
-import Testimonials from './components/Testimonials/Testimonials'
-import Footer from './components/Footer/Footer'
-import CartDrawer from './components/CartDrawer/CartDrawer'
-import CheckoutModal from './components/CheckoutModal/CheckoutModal'
-import CartToast from './components/CartToast/CartToast'
-import FlyToCart from './components/FlyToCart/FlyToCart'
+import { Routes, Route } from 'react-router-dom'
+import Layout from './components/Layout/Layout'
+import HomePage from './pages/HomePage'
+import CategoriesPage from './pages/CategoriesPage'
+import CategoryPage from './pages/CategoryPage'
+import ShopPage from './pages/ShopPage'
+import ProductPage from './pages/ProductPage'
 
 function App() {
   return (
-    <>
-      <Navbar />
-      <main>
-        <Hero />
-        <TrustBar />
-        <Categorias />
-        <Shop />
-        <MaisVendidos />
-        <Benefits />
-        <Testimonials />
-      </main>
-      <Footer />
-      <CartDrawer />
-      <CheckoutModal />
-      <CartToast />
-      <FlyToCart />
-    </>
+    <Routes>
+      <Route element={<Layout />}>
+        <Route index element={<HomePage />} />
+        <Route path="loja" element={<ShopPage />} />
+        <Route path="categorias" element={<CategoriesPage />} />
+        <Route path="categoria/:slug" element={<CategoryPage />} />
+        <Route path="produto/:id" element={<ProductPage />} />
+        <Route path="*" element={<HomePage />} />
+      </Route>
+    </Routes>
   )
 }
 

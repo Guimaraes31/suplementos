@@ -22,7 +22,8 @@ export type SortOption = 'relevancia' | 'menor-preco' | 'mais-vendidos'
 
 /**
  * Framer CMS Collection: "Products"
- * Fields: Name, Price, Category, Image, Short Description, Badge, Stock Status
+ * Fields: Name, Price, Category, Image, Short Description, Badge, Stock Status,
+ * Benefits, Flavors, Sizes
  */
 export interface Product {
   id: string
@@ -34,6 +35,9 @@ export interface Product {
   badge: ProductBadge
   stockStatus: StockStatus
   salesRank: number
+  benefits: string[]
+  flavors?: string[]
+  sizes?: string[]
 }
 
 export interface ProductFilters {
@@ -41,4 +45,9 @@ export interface ProductFilters {
   minPrice: number
   maxPrice: number
   sort: SortOption
+}
+
+export interface ProductVariant {
+  flavor?: string
+  size?: string
 }

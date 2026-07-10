@@ -1,12 +1,14 @@
-import type { Product } from '../cms/types'
+import type { Product, ProductVariant } from '../cms/types'
 
 export interface CartItem {
+  lineId: string
   productId: string
   name: string
   price: number
   image: string
   category: string
   quantity: number
+  variant?: ProductVariant
 }
 
 export interface ToastState {
@@ -22,14 +24,30 @@ export interface CheckoutForm {
   notes: string
 }
 
-export function productToCartItem(product: Product, quantity = 1): CartItem {
+function buildLineId(productId: string, variant?: ProductVariant): string {
+  const parts = [variant?.flavor, variant?.size].filter(Boolean)
+  return parts.length > 0 ? `${productId}:${parts.join('|')}` : productId
+}
+
+function buildDisplayName(product: Product, variant?: ProductVariant): string {
+  const parts = [variant?.flavor, variant?.size].filter(Boolean)
+  return parts.length > 0 ? `${product.name} — ${parts.join(' · ')}` : product.name
+}
+
+export function productToCartItem(
+  product: Product,
+  quantity = 1,
+  variant?: ProductVariant,
+): CartItem {
   return {
+    lineId: buildLineId(product.id, variant),
     productId: product.id,
-    name: product.name,
+    name: buildDisplayName(product, variant),
     price: product.price,
     image: product.image,
     category: product.category,
     quantity,
+    variant,
   }
 }
 

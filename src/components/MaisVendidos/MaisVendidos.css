@@ -1,7 +1,19 @@
 .mais-vendidos {
+  position: relative;
   padding-block: var(--space-3xl);
   border-top: 1px solid var(--color-border);
   overflow: hidden;
+}
+
+.mais-vendidos__glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(80vw, 600px);
+  height: 300px;
+  background: radial-gradient(ellipse, rgba(197, 164, 110, 0.06) 0%, transparent 70%);
+  pointer-events: none;
 }
 
 .mais-vendidos__header {
@@ -9,6 +21,8 @@
   flex-direction: column;
   gap: var(--space-sm);
   margin-bottom: var(--space-xl);
+  position: relative;
+  z-index: 1;
 }
 
 @media (min-width: 768px) {
@@ -61,13 +75,47 @@
 }
 
 .mais-vendidos__nav {
-  display: flex;
+  display: none;
+  align-items: center;
   gap: 0.5rem;
 }
 
+@media (min-width: 900px) {
+  .mais-vendidos__nav:not(.mais-vendidos__nav--mobile) {
+    display: flex;
+  }
+}
+
+.mais-vendidos__nav--mobile {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-md);
+}
+
+@media (min-width: 900px) {
+  .mais-vendidos__nav--mobile {
+    display: none;
+  }
+}
+
+.mais-vendidos__all-link {
+  margin-right: 0.5rem;
+  font-size: 0.8125rem;
+  font-family: var(--font-display);
+  letter-spacing: 0.04em;
+  color: var(--color-gold);
+  min-height: var(--tap-target);
+  display: inline-flex;
+  align-items: center;
+}
+
+.mais-vendidos__all-link:hover {
+  text-decoration: underline;
+}
+
 .mais-vendidos__nav-btn {
-  width: 44px;
-  height: 44px;
+  width: var(--tap-target);
+  height: var(--tap-target);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -84,69 +132,88 @@
 }
 
 .mais-vendidos__nav-btn:disabled {
-  opacity: 0.3;
+  opacity: 0.25;
   cursor: not-allowed;
 }
 
 .mais-vendidos__track-wrap {
   position: relative;
+  z-index: 1;
 }
 
+/* Carrossel único: mobile + desktop */
 .mais-vendidos__track {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-md);
+  display: flex;
+  gap: 0.875rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  touch-action: pan-x;
+  cursor: grab;
+  scrollbar-width: none;
+  padding-bottom: var(--space-sm);
+  margin-inline: calc(-1 * var(--container-padding));
+  padding-inline: var(--container-padding);
 }
 
-@media (min-width: 768px) {
+.mais-vendidos__track::-webkit-scrollbar {
+  display: none;
+}
+
+.mais-vendidos__track--dragging {
+  cursor: grabbing;
+  scroll-behavior: auto;
+  scroll-snap-type: none;
+  user-select: none;
+}
+
+.mais-vendidos__track--dragging .product-card {
+  pointer-events: none;
+}
+
+.mais-vendidos__slide {
+  flex: 0 0 min(78vw, 280px);
+  scroll-snap-align: start;
+  min-width: 0;
+}
+
+@media (min-width: 600px) {
+  .mais-vendidos__slide {
+    flex: 0 0 calc(50% - 0.5rem);
+  }
+}
+
+@media (min-width: 900px) {
   .mais-vendidos__track {
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--space-lg);
+    gap: var(--space-md);
+  }
+
+  .mais-vendidos__slide {
+    flex: 0 0 calc(33.333% - 0.75rem);
   }
 }
 
 @media (min-width: 1100px) {
-  .mais-vendidos__track {
-    grid-template-columns: repeat(4, 1fr);
+  .mais-vendidos__slide {
+    flex: 0 0 calc(25% - 0.75rem);
   }
 }
 
-.mais-vendidos__track--carousel {
-  display: flex;
-  gap: var(--space-md);
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  padding-bottom: 0.5rem;
+.mais-vendidos__progress {
+  height: 2px;
+  background: var(--color-border);
+  margin-top: var(--space-sm);
+  overflow: hidden;
+  border-radius: 2px;
 }
 
-.mais-vendidos__track--carousel::-webkit-scrollbar {
-  display: none;
-}
-
-@media (min-width: 768px) {
-  .mais-vendidos__track--carousel {
-    display: grid;
-    overflow: visible;
-    scroll-snap-type: none;
-  }
-}
-
-.mais-vendidos__track--carousel > * {
-  flex: 0 0 calc(50% - 0.5rem);
-  scroll-snap-align: start;
-}
-
-@media (min-width: 480px) {
-  .mais-vendidos__track--carousel > * {
-    flex: 0 0 calc(40% - 0.5rem);
-  }
-}
-
-@media (min-width: 768px) {
-  .mais-vendidos__track--carousel > * {
-    flex: unset;
-  }
+.mais-vendidos__progress-fill {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, var(--color-gold-deep), var(--color-gold));
+  transform-origin: left;
+  transition: transform 0.2s ease;
 }

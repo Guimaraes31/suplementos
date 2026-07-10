@@ -1,22 +1,24 @@
+import { Link } from 'react-router-dom'
 import BrandLogo from '../BrandLogo/BrandLogo'
 import { storeConfig } from '../../config/store'
+import { CATEGORIES } from '../../config/categories'
+import { categoryPath, shopPath } from '../../config/navigation'
 import './Footer.css'
 
 const navLinks = [
-  { label: 'Loja', href: '#loja-produtos' },
-  { label: 'Categorias', href: '#categorias' },
-  { label: 'Mais Vendidos', href: '#mais-vendidos' },
-  { label: 'Sobre', href: '#sobre' },
+  { label: 'Início', to: '/' },
+  { label: 'Loja', to: '/loja' },
+  { label: 'Categorias', to: '/categorias' },
+  { label: 'Mais Vendidos', to: '/#mais-vendidos' },
+  { label: 'Sobre Nós', to: '/#sobre' },
+  { label: 'Contato', to: '/#contato' },
 ]
 
-const categoryLinks = [
-  { label: 'Whey Protein', href: '#loja-produtos' },
-  { label: 'Creatina', href: '#loja-produtos' },
-  { label: 'Pré-Treino', href: '#loja-produtos' },
-  { label: 'Packs', href: '#loja-produtos' },
+const paymentMethods = [
+  { id: 'pix', label: 'Pix', featured: true },
+  { id: 'whatsapp', label: 'WhatsApp', featured: false },
+  { id: 'ifood', label: 'iFood', featured: false },
 ]
-
-const paymentMethods = ['Visa', 'Mastercard', 'Pix', 'Boleto', 'Elo', 'Amex']
 
 function InstagramIcon() {
   return (
@@ -47,7 +49,8 @@ export default function Footer() {
               <BrandLogo variant="footer" />
             </div>
             <p className="footer__tagline">
-              Suplementos premium de alta performance. Qualidade, confiança e resultados — Zona Sul, São Paulo.
+              {storeConfig.tagline}. Atendimento especializado, preço justo e entrega rápida —
+              Jardim São Carlos, Zona Sul de São Paulo.
             </p>
             <div className="footer__social">
               <a href={storeConfig.instagram} className="footer__social-link" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
@@ -63,8 +66,8 @@ export default function Footer() {
             <h3 className="footer__column-title">Navegação</h3>
             <ul className="footer__links">
               {navLinks.map((link) => (
-                <li key={link.href}>
-                  <a href={link.href} className="footer__link">{link.label}</a>
+                <li key={link.to}>
+                  <Link to={link.to} className="footer__link">{link.label}</Link>
                 </li>
               ))}
             </ul>
@@ -73,11 +76,14 @@ export default function Footer() {
           <div>
             <h3 className="footer__column-title">Categorias</h3>
             <ul className="footer__links">
-              {categoryLinks.map((link) => (
-                <li key={link.label}>
-                  <a href={link.href} className="footer__link">{link.label}</a>
+              {CATEGORIES.map((cat) => (
+                <li key={cat.slug}>
+                  <Link to={categoryPath(cat.slug)} className="footer__link">{cat.label}</Link>
                 </li>
               ))}
+              <li>
+                <Link to={shopPath()} className="footer__link">Loja completa</Link>
+              </li>
             </ul>
           </div>
 
@@ -85,26 +91,38 @@ export default function Footer() {
             <h3 className="footer__column-title">Contato</h3>
             <address className="footer__address">
               <strong>Nascimento Suplementos</strong>
-              Rua Henrique Guilherme Nicolini, 126
+              {storeConfig.addressShort}
               <br />
-              Jardim São Carlos — São Paulo, SP
+              {storeConfig.neighborhood}
+              <br />
+              CEP {storeConfig.cep}
               <br />
               <br />
-              {storeConfig.pixKey}
+              {storeConfig.hoursDisplay}
+              <br />
               <br />
               {storeConfig.whatsappDisplay}
               <br />
               {storeConfig.instagramHandle}
+              <br />
+              <a href={storeConfig.ifood} className="footer__link" target="_blank" rel="noopener noreferrer">
+                Pedir no iFood
+              </a>
             </address>
           </div>
         </div>
 
         <div className="footer__payments">
           <div className="footer__payments-inner">
-            <span className="footer__payments-label">Formas de pagamento</span>
+            <span className="footer__payments-label">Peça e combine pagamento por</span>
             <div className="footer__payment-icons">
               {paymentMethods.map((method) => (
-                <span key={method} className="footer__payment-icon">{method}</span>
+                <span
+                  key={method.id}
+                  className={`footer__payment-icon ${method.featured ? 'footer__payment-icon--featured' : ''}`}
+                >
+                  {method.label}
+                </span>
               ))}
             </div>
           </div>
@@ -114,10 +132,21 @@ export default function Footer() {
           <p className="footer__copyright">
             © {new Date().getFullYear()} Nascimento Suplementos. Todos os direitos reservados.
           </p>
-          <nav className="footer__legal" aria-label="Links legais">
-            <a href="#" className="footer__legal-link">Política de Privacidade</a>
-            <a href="#" className="footer__legal-link">Termos de Uso</a>
-            <a href="#" className="footer__legal-link">Trocas e Devoluções</a>
+          <nav className="footer__legal" aria-label="Links úteis">
+            <a href={storeConfig.instagram} className="footer__legal-link" target="_blank" rel="noopener noreferrer">
+              Instagram
+            </a>
+            <a href={storeConfig.ifood} className="footer__legal-link" target="_blank" rel="noopener noreferrer">
+              iFood
+            </a>
+            <a
+              href={`https://wa.me/${storeConfig.whatsapp}`}
+              className="footer__legal-link"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              WhatsApp
+            </a>
           </nav>
         </div>
       </div>

@@ -7,6 +7,7 @@ import './CartDrawer.css'
 export default function CartDrawer() {
   const {
     items,
+    itemCount,
     subtotal,
     isDrawerOpen,
     closeDrawer,
@@ -41,7 +42,12 @@ export default function CartDrawer() {
             <header className="cart-drawer__header">
               <div className="cart-drawer__title-wrap">
                 <span className="cart-drawer__eyebrow">Sua seleção</span>
-                <h2 className="cart-drawer__title">Carrinho</h2>
+                <h2 className="cart-drawer__title">
+                  Carrinho
+                  {itemCount > 0 && (
+                    <span className="cart-drawer__count">{itemCount}</span>
+                  )}
+                </h2>
               </div>
               <button
                 type="button"
@@ -66,7 +72,7 @@ export default function CartDrawer() {
                   </div>
                   <p className="cart-drawer__empty-title">Carrinho vazio</p>
                   <p className="cart-drawer__empty-text">
-                    Explore nossa coleção premium e adicione seus suplementos favoritos.
+                    Explore a loja e adicione o que precisa — em dúvida, peça orientação no WhatsApp.
                   </p>
                   <a href="#loja-produtos" className="cart-drawer__shop-btn" onClick={closeDrawer}>
                     Explorar Loja
@@ -76,7 +82,7 @@ export default function CartDrawer() {
                 <ul className="cart-drawer__list">
                   {items.map((item, i) => (
                     <motion.li
-                      key={item.productId}
+                      key={item.lineId}
                       className="cart-item"
                       layout
                       initial={{ opacity: 0, x: 12 }}
@@ -108,7 +114,7 @@ export default function CartDrawer() {
                           <button
                             type="button"
                             className="cart-item__qty-btn"
-                            onClick={() => updateQuantity(item.productId, item.quantity - 1)}
+                            onClick={() => updateQuantity(item.lineId, item.quantity - 1)}
                             aria-label="Diminuir quantidade"
                           >
                             −
@@ -117,7 +123,7 @@ export default function CartDrawer() {
                           <button
                             type="button"
                             className="cart-item__qty-btn"
-                            onClick={() => updateQuantity(item.productId, item.quantity + 1)}
+                            onClick={() => updateQuantity(item.lineId, item.quantity + 1)}
                             aria-label="Aumentar quantidade"
                           >
                             +
@@ -126,7 +132,7 @@ export default function CartDrawer() {
                         <button
                           type="button"
                           className="cart-item__remove"
-                          onClick={() => removeItem(item.productId)}
+                          onClick={() => removeItem(item.lineId)}
                         >
                           Remover
                         </button>
@@ -151,6 +157,9 @@ export default function CartDrawer() {
                   Finalizar Compra
                 </button>
                 <p className="cart-drawer__installment">{formatInstallment(subtotal)}</p>
+                <p className="cart-drawer__trust">
+                  Entrega ou retirada · Pagamento no WhatsApp · Zona Sul
+                </p>
               </footer>
             )}
           </motion.aside>

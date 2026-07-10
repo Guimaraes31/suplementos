@@ -1,30 +1,17 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, type FormEvent } from 'react'
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import BrandLogo from '../BrandLogo/BrandLogo'
 import { useCart } from '../../context/CartContext'
+import { NAV_LINKS, HOME_SECTION_IDS, shopPath } from '../../config/navigation'
+import { useScrollSpy } from '../../hooks/useScrollSpy'
 import './Navbar.css'
-
-const navLinks = [
-  { label: 'Loja', href: '#loja-produtos' },
-  { label: 'Categorias', href: '#categorias' },
-  { label: 'Sobre', href: '#sobre' },
-  { label: 'Contato', href: '#contato' },
-]
 
 function SearchIcon() {
   return (
     <svg className="navbar__search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
       <circle cx="11" cy="11" r="7" />
       <path d="M20 20L16.5 16.5" strokeLinecap="round" />
-    </svg>
-  )
-}
-
-function UserIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-      <circle cx="12" cy="8" r="4" />
-      <path d="M4 20c0-4 3.5-7 8-7s8 3 8 7" strokeLinecap="round" />
     </svg>
   )
 }
@@ -59,13 +46,36 @@ function MenuIcon({ open }: { open: boolean }) {
   )
 }
 
+function linkIsActive(pathname: string, hash: string, linkTo: string, scrollId: string) {
+  if (linkTo === '/') {
+    return pathname === '/' && (!hash || hash === '#inicio')
+  }
+  if (linkTo.startsWith('/#')) {
+    const section = linkTo.slice(2)
+    return pathname === '/' && (hash === `#${section}` || scrollId === section)
+  }
+  if (linkTo === '/loja') {
+    return pathname === '/loja' || pathname.startsWith('/produto/')
+  }
+  if (linkTo === '/categorias') {
+    return pathname === '/categorias' || pathname.startsWith('/categoria/')
+  }
+  return pathname === linkTo
+}
+
 export default function Navbar() {
   const { itemCount, openDrawer } = useCart()
+  const navigate = useNavigate()
+  const { pathname, hash } = useLocation()
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [searchValue, setSearchValue] = useState('')
+
+  const onHome = pathname === '/'
+  const scrollId = useScrollSpy(onHome ? HOME_SECTION_IDS : [], 140)
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20)
+    const onScroll = () => setScrolled(window.scrollY > 16)
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
@@ -75,35 +85,52 @@ export default function Navbar() {
     return () => { document.body.style.overflow = '' }
   }, [menuOpen])
 
+  useEffect(() => {
+    setMenuOpen(false)
+  }, [pathname, hash])
+
+  const handleSearch = (e: FormEvent) => {
+    e.preventDefault()
+    const q = searchValue.trim()
+    navigate(shopPath({ q: q || undefined }))
+    setMenuOpen(false)
+  }
+
   return (
-    <header className={`navbar ${scrolled ? 'navbar--scrolled' : ''}`}>
+    <header className={`navbar ${scrolled ? 'navbar--scrolled' : ''} ${menuOpen ? 'navbar--menu-open' : ''}`}>
       <div className="container navbar__inner">
-        <a href="#" className="navbar__logo" aria-label="Nascimento Suplementos — Página inicial">
+        <Link to="/" className="navbar__logo" aria-label="Nascimento Suplementos — Página inicial">
           <BrandLogo variant="navbar" />
-        </a>
+        </Link>
 
         <nav className="navbar__nav" aria-label="Navegação principal">
-          {navLinks.map((link) => (
-            <a key={link.href} href={link.href} className="navbar__link">
-              {link.label}
-            </a>
-          ))}
+          {NAV_LINKS.map((link) => {
+            const active = linkIsActive(pathname, hash, link.to, scrollId)
+            return (
+              <NavLink
+                key={link.id}
+                to={link.to}
+                className={`navbar__link ${active ? 'navbar__link--active' : ''}`}
+                aria-current={active ? 'page' : undefined}
+              >
+                {link.label}
+              </NavLink>
+            )
+          })}
         </nav>
 
         <div className="navbar__actions">
-          <label className="navbar__search">
+          <form className="navbar__search" onSubmit={handleSearch} role="search">
             <SearchIcon />
             <input
               type="search"
               className="navbar__search-input"
               placeholder="Buscar produtos..."
               aria-label="Buscar produtos"
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
             />
-          </label>
-
-          <button type="button" className="navbar__icon-btn" aria-label="Minha conta">
-            <UserIcon />
-          </button>
+          </form>
 
           <button
             type="button"
@@ -143,29 +170,62 @@ export default function Navbar() {
 
       <AnimatePresence>
         {menuOpen && (
-          <motion.nav
-            className="navbar__mobile-menu"
-            aria-label="Menu mobile"
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
-          >
-            {navLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                className="navbar__mobile-link"
-                onClick={() => setMenuOpen(false)}
-              >
-                {link.label}
-              </a>
-            ))}
-            <label className="navbar__mobile-search">
-              <SearchIcon />
-              <input type="search" placeholder="Buscar produtos..." aria-label="Buscar produtos" />
-            </label>
-          </motion.nav>
+          <>
+            <motion.div
+              className="navbar__mobile-backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              onClick={() => setMenuOpen(false)}
+              aria-hidden="true"
+            />
+            <motion.nav
+              className="navbar__mobile-menu"
+              aria-label="Menu mobile"
+              initial={{ opacity: 0, y: -12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+            >
+              <div className="navbar__mobile-menu-inner">
+                <span className="navbar__mobile-eyebrow">Menu</span>
+                {NAV_LINKS.map((link, i) => {
+                  const active = linkIsActive(pathname, hash, link.to, scrollId)
+                  return (
+                    <motion.div
+                      key={link.id}
+                      initial={{ opacity: 0, x: -16 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: i * 0.05, duration: 0.3 }}
+                    >
+                      <Link
+                        to={link.to}
+                        className={`navbar__mobile-link ${active ? 'navbar__mobile-link--active' : ''}`}
+                        aria-current={active ? 'page' : undefined}
+                        onClick={() => setMenuOpen(false)}
+                      >
+                        <span className="navbar__mobile-link-num" aria-hidden="true">
+                          {String(i + 1).padStart(2, '0')}
+                        </span>
+                        {link.label}
+                      </Link>
+                    </motion.div>
+                  )
+                })}
+                <form className="navbar__mobile-search" onSubmit={handleSearch} role="search">
+                  <SearchIcon />
+                  <input
+                    type="search"
+                    placeholder="Buscar produtos..."
+                    aria-label="Buscar produtos"
+                    value={searchValue}
+                    onChange={(e) => setSearchValue(e.target.value)}
+                  />
+                </form>
+              </div>
+            </motion.nav>
+          </>
         )}
       </AnimatePresence>
     </header>

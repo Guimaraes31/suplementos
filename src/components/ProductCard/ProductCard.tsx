@@ -1,6 +1,8 @@
-import { useRef } from 'react'
+import { useRef, useState, type MouseEvent } from 'react'
+import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import type { Product } from '../../cms/types'
+import { productPath } from '../../config/navigation'
 import { useCart } from '../../context/CartContext'
 import { formatPrice, formatInstallment } from '../../utils/format'
 import SafeImage from '../SafeImage/SafeImage'
@@ -10,34 +12,44 @@ interface ProductCardProps {
   product: Product
   index?: number
   animate?: boolean
+  featured?: boolean
 }
 
-export default function ProductCard({ product, index = 0, animate = true }: ProductCardProps) {
+export default function ProductCard({ product, index = 0, animate = true, featured = false }: ProductCardProps) {
   const { addItem } = useCart()
   const imageRef = useRef<HTMLDivElement>(null)
+  const [isAdding, setIsAdding] = useState(false)
   const isOutOfStock = product.stockStatus === 'Esgotado'
   const isLowStock = product.stockStatus === 'Últimas unidades'
+  const showStock = isLowStock || isOutOfStock
+  const to = productPath(product.id)
 
-  const handleAdd = () => {
+  const handleAdd = (e: MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (isOutOfStock) return
     const rect = imageRef.current?.getBoundingClientRect()
+    setIsAdding(true)
     addItem(product, rect)
+    window.setTimeout(() => setIsAdding(false), 480)
   }
 
   const card = (
-    <article
-      className={`product-card ${isOutOfStock ? 'product-card--out-of-stock' : ''}`}
+    <Link
+      id={`product-${product.id}`}
+      to={to}
+      className={`product-card ${isOutOfStock ? 'product-card--out-of-stock' : ''} ${featured ? 'product-card--featured' : ''}`}
+      aria-label={`Ver detalhes de ${product.name}`}
     >
-      <div className="product-card__image-wrap" ref={imageRef}>
+      <div
+        className={`product-card__image-wrap ${isAdding ? 'product-card__image-wrap--flash' : ''}`}
+        ref={imageRef}
+      >
         {product.badge && (
           <span className={`product-card__badge ${product.badge === 'Oferta' ? 'product-card__badge--oferta' : ''}`}>
             {product.badge}
           </span>
         )}
-        <span
-          className={`product-card__stock ${isLowStock ? 'product-card__stock--low' : ''} ${isOutOfStock ? 'product-card__stock--out' : ''}`}
-        >
-          {product.stockStatus}
-        </span>
         <SafeImage
           className="product-card__image"
           src={product.image}
@@ -46,21 +58,31 @@ export default function ProductCard({ product, index = 0, animate = true }: Prod
           height={400}
           loading="lazy"
         />
-        <div className="product-card__overlay">
+        <div className="product-card__overlay" aria-hidden="true">
           <button
             type="button"
-            className="product-card__add-btn"
+            className={`product-card__add-btn ${isAdding ? 'product-card__add-btn--adding' : ''}`}
             disabled={isOutOfStock}
             onClick={handleAdd}
             aria-label={`Adicionar ${product.name} ao carrinho`}
           >
-            {isOutOfStock ? 'Indisponível' : 'Adicionar ao Carrinho'}
+            {isOutOfStock ? 'Indisponível' : 'Adicionar'}
           </button>
         </div>
       </div>
 
       <div className="product-card__body">
-        <span className="product-card__category">{product.category}</span>
+        <div className="product-card__meta-row">
+          <span className="product-card__category">{product.category}</span>
+          {showStock && (
+            <span
+              className={`product-card__stock-pill ${isLowStock ? 'product-card__stock-pill--low' : ''} ${isOutOfStock ? 'product-card__stock-pill--out' : ''}`}
+            >
+              {isLowStock && <span className="product-card__stock-dot" aria-hidden="true" />}
+              {product.stockStatus}
+            </span>
+          )}
+        </div>
         <h3 className="product-card__name">{product.name}</h3>
         <p className="product-card__desc">{product.shortDescription}</p>
         <div className="product-card__pricing">
@@ -68,7 +90,9 @@ export default function ProductCard({ product, index = 0, animate = true }: Prod
           <span className="product-card__installment">{formatInstallment(product.price)}</span>
         </div>
       </div>
-    </article>
+
+      <span className="product-card__tap-hint" aria-hidden="true">Ver produto</span>
+    </Link>
   )
 
   if (!animate) return card

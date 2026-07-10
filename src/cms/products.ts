@@ -1,14 +1,15 @@
 import type { Product } from './types'
+import { enrichProduct } from './productMeta'
 import { images } from '../assets/images'
 
-export const productsCollection: Product[] = [
+const rawProducts = [
   {
     id: 'whey-gold-isolate',
     name: 'Whey Gold Isolate 900g',
     price: 189.9,
     category: 'Whey Protein',
     image: images.products.wheyGold,
-    shortDescription: 'Isolado ultra-filtrado com 27g de proteína por dose. Absorção rápida e sabor refinado.',
+    shortDescription: 'Whey isolado de absorção rápida — um dos mais pedidos para pós-treino.',
     badge: 'Mais Vendido',
     stockStatus: 'Em estoque',
     salesRank: 98,
@@ -19,7 +20,7 @@ export const productsCollection: Product[] = [
     price: 149.9,
     category: 'Whey Protein',
     image: images.products.wheyConcentrado,
-    shortDescription: 'Blend premium de concentração ideal para ganho muscular e recuperação diária.',
+    shortDescription: 'Whey concentrado para o dia a dia de treino e recuperação.',
     badge: null,
     stockStatus: 'Em estoque',
     salesRank: 72,
@@ -30,7 +31,7 @@ export const productsCollection: Product[] = [
     price: 169.9,
     category: 'Whey Protein',
     image: images.products.wheyVegan,
-    shortDescription: 'Proteína vegetal completa com aminoácidos essenciais. Fórmula clean e digestível.',
+    shortDescription: 'Proteína vegetal — opção para quem prefere fórmula plant-based.',
     badge: 'Lançamento',
     stockStatus: 'Em estoque',
     salesRank: 65,
@@ -41,7 +42,7 @@ export const productsCollection: Product[] = [
     price: 89.9,
     category: 'Creatina',
     image: images.products.creatinaMono,
-    shortDescription: 'Pureza farmacêutica certificada. Força, potência e performance comprovadas.',
+    shortDescription: 'Creatina monohidratada — base clássica para força e performance no treino.',
     badge: 'Mais Vendido',
     stockStatus: 'Em estoque',
     salesRank: 95,
@@ -52,7 +53,7 @@ export const productsCollection: Product[] = [
     price: 119.9,
     category: 'Creatina',
     image: images.products.creatinaHcl,
-    shortDescription: 'Alta solubilidade e absorção superior. Sem necessidade de fase de carga.',
+    shortDescription: 'Creatina HCL em cápsulas — prática para quem prefere não medir pó.',
     badge: 'Premium',
     stockStatus: 'Últimas unidades',
     salesRank: 58,
@@ -63,7 +64,7 @@ export const productsCollection: Product[] = [
     price: 129.9,
     category: 'Pré-Treino',
     image: images.products.preFury,
-    shortDescription: 'Energia limpa e foco absoluto. Cafeína microencapsulada para liberação gradual.',
+    shortDescription: 'Pré-treino para energia e intensidade — pergunte se combina com seu perfil.',
     badge: 'Lançamento',
     stockStatus: 'Em estoque',
     salesRank: 81,
@@ -74,7 +75,7 @@ export const productsCollection: Product[] = [
     price: 99.9,
     category: 'Pré-Treino',
     image: images.products.preFocus,
-    shortDescription: 'Estimulante moderado com beta-alanina e citrulina para pumps intensos.',
+    shortDescription: 'Pré-treino de estímulo moderado — boa porta de entrada se você está começando.',
     badge: null,
     stockStatus: 'Em estoque',
     salesRank: 54,
@@ -85,7 +86,7 @@ export const productsCollection: Product[] = [
     price: 109.9,
     category: 'Pós-Treino',
     image: images.products.posRecovery,
-    shortDescription: 'Recuperação acelerada com carboidratos de alto índice e eletrólitos.',
+    shortDescription: 'Pós-treino para reposição e recuperação após treinos pesados.',
     badge: null,
     stockStatus: 'Em estoque',
     salesRank: 67,
@@ -96,7 +97,7 @@ export const productsCollection: Product[] = [
     price: 79.9,
     category: 'Pós-Treino',
     image: images.products.bcaa,
-    shortDescription: 'Aminoácidos essenciais para reduzir fadiga e preservar massa magra.',
+    shortDescription: 'BCAA para quem quer aminoácidos no pós-treino ou ao longo do dia.',
     badge: null,
     stockStatus: 'Em estoque',
     salesRank: 48,
@@ -107,7 +108,7 @@ export const productsCollection: Product[] = [
     price: 69.9,
     category: 'Vitaminas',
     image: images.products.multi,
-    shortDescription: 'Complexo completo formulado para atletas de alta performance.',
+    shortDescription: 'Multivitamínico de uso diário para complementar a alimentação.',
     badge: null,
     stockStatus: 'Em estoque',
     salesRank: 61,
@@ -118,7 +119,7 @@ export const productsCollection: Product[] = [
     price: 49.9,
     category: 'Vitaminas',
     image: images.products.vitaminaD3,
-    shortDescription: 'Sinergia ideal para imunidade, ossos e absorção de cálcio.',
+    shortDescription: 'Vitamina D3 com K2 — suporte nutricional popular na rotina de treino.',
     badge: 'Mais Vendido',
     stockStatus: 'Em estoque',
     salesRank: 88,
@@ -129,7 +130,7 @@ export const productsCollection: Product[] = [
     price: 89.9,
     category: 'Vitaminas',
     image: images.products.omega3,
-    shortDescription: 'Óleo de peixe destilado molecularmente. EPA e DHA em concentração máxima.',
+    shortDescription: 'Ômega 3 com EPA e DHA — complemento clássico da rotina alimentar.',
     badge: 'Premium',
     stockStatus: 'Em estoque',
     salesRank: 55,
@@ -140,7 +141,7 @@ export const productsCollection: Product[] = [
     price: 349.9,
     category: 'Packs',
     image: images.products.packMassa,
-    shortDescription: 'Whey + Creatina + Pré-Treino. Combinação exclusiva para hipertrofia.',
+    shortDescription: 'Kit whey + creatina + pré-treino para quem busca ganho de massa.',
     badge: 'Oferta',
     stockStatus: 'Em estoque',
     salesRank: 76,
@@ -151,7 +152,7 @@ export const productsCollection: Product[] = [
     price: 299.9,
     category: 'Packs',
     image: images.products.packCutting,
-    shortDescription: 'Whey Isolate + BCAA + Termogênico. Definição muscular com suporte completo.',
+    shortDescription: 'Kit com whey isolate, BCAA e termogênico para fase de definição.',
     badge: null,
     stockStatus: 'Últimas unidades',
     salesRank: 63,
@@ -162,7 +163,7 @@ export const productsCollection: Product[] = [
     price: 249.9,
     category: 'Packs',
     image: images.products.packIniciante,
-    shortDescription: 'Seleção curada para quem está começando. Qualidade premium, preço inteligente.',
+    shortDescription: 'Kit para quem está começando — menos dúvida e melhor custo-benefício.',
     badge: 'Mais Vendido',
     stockStatus: 'Em estoque',
     salesRank: 91,
@@ -173,12 +174,14 @@ export const productsCollection: Product[] = [
     price: 59.9,
     category: 'Vitaminas',
     image: images.products.zma,
-    shortDescription: 'Zinco, magnésio e B6 para sono reparador e recuperação noturna.',
+    shortDescription: 'ZMA com zinco, magnésio e B6 — uso noturno comum na rotina de treino.',
     badge: null,
     stockStatus: 'Esgotado',
     salesRank: 42,
   },
-]
+] as const
+
+export const productsCollection: Product[] = rawProducts.map((p) => enrichProduct(p))
 
 export const priceBounds = {
   min: Math.min(...productsCollection.map((p) => p.price)),
@@ -192,12 +195,42 @@ export function getBestSellers(limit = 6): Product[] {
     .slice(0, limit)
 }
 
+export function getProductById(id: string): Product | undefined {
+  return productsCollection.find((p) => p.id === id)
+}
+
+export function getRelatedProducts(product: Product, limit = 4): Product[] {
+  return productsCollection
+    .filter((p) => p.id !== product.id && p.category === product.category && p.stockStatus !== 'Esgotado')
+    .sort((a, b) => b.salesRank - a.salesRank)
+    .slice(0, limit)
+}
+
+export function searchProducts(query: string, products: Product[] = productsCollection): Product[] {
+  const q = query.trim().toLowerCase()
+  if (!q) return products
+  return products.filter((p) => {
+    const haystack = [
+      p.name,
+      p.category,
+      p.shortDescription,
+      p.badge ?? '',
+      ...(p.benefits ?? []),
+      ...(p.flavors ?? []),
+    ]
+      .join(' ')
+      .toLowerCase()
+    return haystack.includes(q)
+  })
+}
+
 export function filterProducts(
   products: Product[],
   category: Product['category'] | 'Todos',
   minPrice: number,
   maxPrice: number,
   sort: 'relevancia' | 'menor-preco' | 'mais-vendidos',
+  query = '',
 ): Product[] {
   let result = products.filter(
     (p) =>
@@ -205,6 +238,10 @@ export function filterProducts(
       p.price >= minPrice &&
       p.price <= maxPrice,
   )
+
+  if (query.trim()) {
+    result = searchProducts(query, result)
+  }
 
   switch (sort) {
     case 'menor-preco':

@@ -1,5 +1,9 @@
+import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { images } from '../../assets/images'
+import { storeConfig } from '../../config/store'
+import { shopPath } from '../../config/navigation'
 import './Hero.css'
 
 const fadeUp = {
@@ -11,9 +15,27 @@ const fadeUp = {
   }),
 }
 
+function useIsCompactHero(breakpoint = 900) {
+  const [compact, setCompact] = useState(() =>
+    typeof window !== 'undefined' ? window.innerWidth < breakpoint : true,
+  )
+
+  useEffect(() => {
+    const mq = window.matchMedia(`(max-width: ${breakpoint - 1}px)`)
+    const update = () => setCompact(mq.matches)
+    update()
+    mq.addEventListener('change', update)
+    return () => mq.removeEventListener('change', update)
+  }, [breakpoint])
+
+  return compact
+}
+
 export default function Hero() {
+  const compact = useIsCompactHero()
+
   return (
-    <section className="hero" id="loja" aria-label="Destaque principal">
+    <section className="hero" id="inicio" aria-label="Destaque principal">
       <div className="hero__bg-glow" aria-hidden="true" />
       <div className="hero__bg-ring hero__bg-ring--outer" aria-hidden="true" />
       <div className="hero__bg-ring hero__bg-ring--inner" aria-hidden="true" />
@@ -28,7 +50,7 @@ export default function Hero() {
             variants={fadeUp}
           >
             <span className="hero__eyebrow-line" aria-hidden="true" />
-            <span className="hero__eyebrow-text">São Paulo · Zona Sul</span>
+            <span className="hero__eyebrow-text">Jardim São Carlos · Zona Sul, SP</span>
           </motion.div>
 
           <motion.h1
@@ -38,9 +60,9 @@ export default function Hero() {
             custom={1}
             variants={fadeUp}
           >
-            Performance elevada.
+            O suplemento certo.
             <br />
-            <em>Qualidade incomparável.</em>
+            <em>A orientação certa.</em>
           </motion.h1>
 
           <motion.p
@@ -50,8 +72,8 @@ export default function Hero() {
             custom={2}
             variants={fadeUp}
           >
-            Suplementos de alta performance, selecionados com rigor científico
-            para quem exige o melhor em cada treino.
+            {storeConfig.tagline}. Atendimento especializado, preço justo e entrega rápida —
+            whey, creatina, pré-treino e mais, das marcas que você confia.
           </motion.p>
 
           <motion.div
@@ -61,14 +83,19 @@ export default function Hero() {
             custom={3}
             variants={fadeUp}
           >
-            <a href="#loja-produtos" className="hero__cta">
-              Explorar Loja
+            <Link to={shopPath()} className="hero__cta">
+              Ver produtos
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
                 <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-            </a>
-            <a href="#sobre" className="hero__cta-secondary">
-              Conheça nossa história
+            </Link>
+            <a
+              href={`https://wa.me/${storeConfig.whatsapp}?text=${encodeURIComponent('Olá! Quero orientação para escolher o suplemento certo pro meu objetivo.')}`}
+              className="hero__cta-secondary"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Pedir orientação
             </a>
           </motion.div>
         </div>
@@ -77,7 +104,7 @@ export default function Hero() {
           className="hero__visual"
           initial={{ opacity: 0, scale: 0.92 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, delay: 0.25, ease: [0.4, 0, 0.2, 1] as const }}
+          transition={{ duration: 0.8, delay: 0.2, ease: [0.4, 0, 0.2, 1] as const }}
         >
           <div className="hero__emblem-stage">
             <div className="hero__emblem-glow" aria-hidden="true" />
@@ -89,17 +116,25 @@ export default function Hero() {
               width={480}
               height={480}
               loading="eager"
-              animate={{ y: [0, -8, 0] }}
-              transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+              animate={compact ? { y: 0 } : { y: [0, -8, 0] }}
+              transition={
+                compact
+                  ? { duration: 0 }
+                  : { duration: 5, repeat: Infinity, ease: 'easeInOut' }
+              }
             />
-            <div className="hero__emblem-accent hero__emblem-accent--left">
-              <span className="hero__emblem-accent-label">Desde</span>
-              <span className="hero__emblem-accent-value">2018</span>
-            </div>
-            <div className="hero__emblem-accent hero__emblem-accent--right">
-              <span className="hero__emblem-accent-label">Pureza</span>
-              <span className="hero__emblem-accent-value">100%</span>
-            </div>
+            {!compact && (
+              <>
+                <div className="hero__emblem-accent hero__emblem-accent--left">
+                  <span className="hero__emblem-accent-label">Zona Sul</span>
+                  <span className="hero__emblem-accent-value">SP</span>
+                </div>
+                <div className="hero__emblem-accent hero__emblem-accent--right">
+                  <span className="hero__emblem-accent-label">Entrega</span>
+                  <span className="hero__emblem-accent-value">Rápida</span>
+                </div>
+              </>
+            )}
           </div>
         </motion.div>
       </div>

@@ -2,6 +2,18 @@
   padding-block: var(--space-3xl);
 }
 
+@media (max-width: 767px) {
+  .categorias__header {
+    margin-bottom: var(--space-lg);
+  }
+
+  .categorias__view-all {
+    margin-top: var(--space-xs);
+    min-height: var(--tap-target);
+    align-items: center;
+  }
+}
+
 .categorias__header {
   display: flex;
   flex-direction: column;
@@ -85,13 +97,13 @@
 
 .categorias__grid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-md);
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
 }
 
-@media (min-width: 600px) {
+@media (min-width: 480px) {
   .categorias__grid {
-    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-md);
   }
 }
 
@@ -100,6 +112,11 @@
     grid-template-columns: repeat(3, 1fr);
     gap: var(--space-lg);
   }
+}
+
+a.category-card {
+  color: inherit;
+  text-decoration: none;
 }
 
 .category-card {
@@ -121,8 +138,14 @@
 
 .category-card__image-wrap {
   position: relative;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 3 / 4;
   overflow: hidden;
+}
+
+@media (min-width: 600px) {
+  .category-card__image-wrap {
+    aspect-ratio: 4 / 3;
+  }
 }
 
 .category-card__image-wrap::after {
@@ -156,8 +179,8 @@
 
 .category-card__number {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
+  top: 0.625rem;
+  right: 0.625rem;
   z-index: 2;
   font-family: var(--font-display);
   font-size: 0.625rem;
@@ -168,16 +191,22 @@
 }
 
 .category-card__body {
-  padding: var(--space-md) var(--space-md) var(--space-lg);
+  padding: var(--space-sm) var(--space-sm) var(--space-md);
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);
   flex: 1;
 }
 
+@media (min-width: 600px) {
+  .category-card__body {
+    padding: var(--space-md) var(--space-md) var(--space-lg);
+  }
+}
+
 .category-card__name {
   font-family: var(--font-display);
-  font-size: 1.125rem;
+  font-size: clamp(0.8125rem, 3.5vw, 1.125rem);
   font-weight: 400;
   letter-spacing: 0.04em;
   color: var(--color-white);
@@ -189,7 +218,7 @@
 }
 
 .category-card__desc {
-  font-size: 0.8125rem;
+  font-size: clamp(0.6875rem, 2.8vw, 0.8125rem);
   font-weight: 300;
   color: var(--color-gray-muted);
   line-height: 1.5;

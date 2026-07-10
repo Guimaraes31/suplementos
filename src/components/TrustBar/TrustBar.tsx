@@ -3,8 +3,17 @@ import './TrustBar.css'
 
 const trustItems = [
   {
-    value: '+15.000',
-    label: 'clientes atendidos',
+    value: 'Orientação',
+    label: 'antes de vender',
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+        <path d="M12 2l2.4 7.2H22l-6 4.6 2.3 7.2L12 17l-6.3 4 2.3-7.2-6-4.6h7.6L12 2z" strokeLinejoin="round" />
+      </svg>
+    ),
+  },
+  {
+    value: 'Atendimento',
+    label: 'especializado',
     icon: (
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
         <circle cx="9" cy="7" r="3" />
@@ -15,35 +24,23 @@ const trustItems = [
     ),
   },
   {
+    value: 'Preço justo',
+    label: 'sem enrolação',
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+        <path d="M12 2v20M8 6h8a3 3 0 010 6H8a3 3 0 000 6h8" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ),
+  },
+  {
     value: 'Entrega rápida',
-    label: 'em São Paulo',
+    label: 'Zona Sul · iFood',
     icon: (
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
         <path d="M3 12h14l-2-6H5L3 12z" strokeLinejoin="round" />
         <circle cx="7" cy="17" r="2" />
         <circle cx="17" cy="17" r="2" />
         <path d="M17 12v5h3" strokeLinecap="round" />
-      </svg>
-    ),
-  },
-  {
-    value: '6x sem juros',
-    label: 'no cartão de crédito',
-    icon: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-        <rect x="2" y="5" width="20" height="14" rx="2" />
-        <path d="M2 10h20" />
-        <path d="M6 15h4" strokeLinecap="round" />
-      </svg>
-    ),
-  },
-  {
-    value: 'Testados',
-    label: 'em laboratório',
-    icon: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-        <path d="M9 3h6v5l5 9a2 2 0 01-2 2H6a2 2 0 01-2-2l5-9V3z" strokeLinejoin="round" />
-        <path d="M9 8h6" strokeLinecap="round" />
       </svg>
     ),
   },
