@@ -18,11 +18,19 @@
 .trust-bar__item {
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
-  padding: var(--space-md) var(--space-sm);
+  gap: 0.5rem;
+  padding: 0.85rem 0.65rem;
   border-right: 1px solid var(--color-border);
   border-bottom: 1px solid var(--color-border);
   transition: background var(--transition-fast);
+  min-width: 0;
+}
+
+@media (min-width: 480px) {
+  .trust-bar__item {
+    gap: var(--space-sm);
+    padding: var(--space-md) var(--space-sm);
+  }
 }
 
 .trust-bar__item:nth-child(2n) {
@@ -55,8 +63,8 @@
 
 .trust-bar__icon {
   flex-shrink: 0;
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -65,10 +73,18 @@
   color: var(--color-gold);
 }
 
+@media (min-width: 480px) {
+  .trust-bar__icon {
+    width: 40px;
+    height: 40px;
+  }
+}
+
 .trust-bar__text {
   display: flex;
   flex-direction: column;
   gap: 2px;
+  min-width: 0;
 }
 
 .trust-bar__value {

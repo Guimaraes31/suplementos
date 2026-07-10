@@ -1,6 +1,6 @@
 .product-page__layout {
   display: grid;
-  gap: var(--space-xl);
+  gap: var(--space-lg);
   margin-bottom: var(--space-2xl);
 }
 
@@ -19,6 +19,15 @@
   background: var(--color-bg-card);
   overflow: hidden;
   aspect-ratio: 1;
+  width: 100%;
+  max-width: min(100%, 480px);
+  margin-inline: auto;
+}
+
+@media (min-width: 900px) {
+  .product-page__gallery {
+    max-width: none;
+  }
 }
 
 .product-page__image {

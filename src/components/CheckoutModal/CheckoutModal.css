@@ -195,8 +195,14 @@
 
 .checkout__delivery-options {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 0.625rem;
+}
+
+@media (min-width: 400px) {
+  .checkout__delivery-options {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 .checkout__delivery-btn {

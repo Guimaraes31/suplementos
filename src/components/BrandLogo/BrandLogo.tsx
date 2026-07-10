@@ -15,6 +15,9 @@ export default function BrandLogo({ variant = 'navbar', showText = true }: Brand
         alt=""
         width={variant === 'navbar' ? 44 : 52}
         height={variant === 'navbar' ? 44 : 52}
+        decoding="async"
+        loading={variant === 'navbar' ? 'eager' : 'lazy'}
+        fetchPriority={variant === 'navbar' ? 'high' : 'auto'}
         aria-hidden="true"
       />
       {showText && (

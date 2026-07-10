@@ -9,6 +9,8 @@ interface SafeImageProps {
   width?: number
   height?: number
   loading?: 'eager' | 'lazy'
+  sizes?: string
+  fetchPriority?: 'high' | 'low' | 'auto'
 }
 
 export default function SafeImage({
@@ -18,6 +20,8 @@ export default function SafeImage({
   width,
   height,
   loading = 'lazy',
+  sizes,
+  fetchPriority,
 }: SafeImageProps) {
   const [currentSrc, setCurrentSrc] = useState(src)
   const [loaded, setLoaded] = useState(false)
@@ -31,6 +35,8 @@ export default function SafeImage({
       height={height}
       loading={loading}
       decoding="async"
+      sizes={sizes}
+      fetchPriority={fetchPriority}
       onLoad={() => setLoaded(true)}
       onError={() => {
         if (currentSrc !== images.fallback) {

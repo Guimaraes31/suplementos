@@ -75,9 +75,31 @@
 
 .home-teaser__actions {
   display: flex;
+  flex-direction: column;
   flex-wrap: wrap;
   justify-content: center;
+  align-items: stretch;
   gap: var(--space-sm);
+}
+
+@media (min-width: 480px) {
+  .home-teaser__actions {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.home-teaser__cta,
+.home-teaser__cta-secondary {
+  width: 100%;
+  justify-content: center;
+}
+
+@media (min-width: 480px) {
+  .home-teaser__cta,
+  .home-teaser__cta-secondary {
+    width: auto;
+  }
 }
 
 .home-teaser__cta {

@@ -185,6 +185,8 @@ export default function HeroCarousel() {
       <div className="hero-carousel__viewport">
         {slides.map((slide, i) => {
           const active = i === index
+          // Carrega o ativo e vizinhos para o swipe não “piscar”
+          const shouldLoad = active || Math.abs(i - index) <= 1 || i === 0
           return (
             <article
               key={slide.id}
@@ -194,9 +196,9 @@ export default function HeroCarousel() {
               aria-hidden={active ? undefined : true}
             >
               {slide.kind === 'brand' ? (
-                <BrandSlideView slide={slide} isFirst={i === 0} />
+                <BrandSlideView slide={slide} isFirst={i === 0} shouldLoad={shouldLoad} />
               ) : (
-                <ProductSlideView slide={slide} isFirst={i === 0} />
+                <ProductSlideView slide={slide} isFirst={i === 0} shouldLoad={shouldLoad} active={active} />
               )}
             </article>
           )
@@ -248,7 +250,15 @@ export default function HeroCarousel() {
   )
 }
 
-function BrandSlideView({ slide, isFirst }: { slide: BrandSlide; isFirst: boolean }) {
+function BrandSlideView({
+  slide,
+  isFirst,
+  shouldLoad,
+}: {
+  slide: BrandSlide
+  isFirst: boolean
+  shouldLoad: boolean
+}) {
   const TitleTag = isFirst ? 'h1' : 'h2'
 
   return (
@@ -294,15 +304,20 @@ function BrandSlideView({ slide, isFirst }: { slide: BrandSlide; isFirst: boolea
           <div className="hero-slide__emblem-stage">
             <div className="hero-slide__emblem-glow" aria-hidden="true" />
             <div className="hero-slide__emblem-ring" aria-hidden="true" />
-            <img
-              className="hero-slide__emblem"
-              src={slide.emblem}
-              alt={slide.emblemAlt}
-              width={480}
-              height={480}
-              loading={isFirst ? 'eager' : 'lazy'}
-              fetchPriority={isFirst ? 'high' : 'auto'}
-            />
+            {shouldLoad ? (
+              <img
+                className="hero-slide__emblem"
+                src={slide.emblem}
+                alt={slide.emblemAlt}
+                width={480}
+                height={480}
+                loading={isFirst ? 'eager' : 'lazy'}
+                decoding="async"
+                fetchPriority={isFirst ? 'high' : 'auto'}
+              />
+            ) : (
+              <div className="hero-slide__emblem" aria-hidden="true" />
+            )}
             {slide.chips.map((chip, idx) => (
               <div
                 key={chip.label}
@@ -319,7 +334,17 @@ function BrandSlideView({ slide, isFirst }: { slide: BrandSlide; isFirst: boolea
   )
 }
 
-function ProductSlideView({ slide, isFirst }: { slide: ProductSlide; isFirst: boolean }) {
+function ProductSlideView({
+  slide,
+  isFirst,
+  shouldLoad,
+  active,
+}: {
+  slide: ProductSlide
+  isFirst: boolean
+  shouldLoad: boolean
+  active: boolean
+}) {
   const TitleTag = isFirst ? 'h1' : 'h2'
   const isDuo = Boolean(slide.productImageSecondary)
   const cutoutClass = slide.cutout ? ' hero-slide__product-img--cutout' : ''
@@ -327,13 +352,16 @@ function ProductSlideView({ slide, isFirst }: { slide: ProductSlide; isFirst: bo
   return (
     <div className="hero-slide__product">
       <div className="hero-slide__media" aria-hidden="true">
-        <img
-          src={slide.bgImage}
-          alt=""
-          width={1600}
-          height={900}
-          loading={isFirst ? 'eager' : 'lazy'}
-        />
+        {shouldLoad ? (
+          <img
+            src={slide.bgImage}
+            alt=""
+            width={800}
+            height={450}
+            loading={active || isFirst ? 'eager' : 'lazy'}
+            decoding="async"
+          />
+        ) : null}
         <div className="hero-slide__shade" />
       </div>
 
@@ -367,23 +395,29 @@ function ProductSlideView({ slide, isFirst }: { slide: ProductSlide; isFirst: bo
             <div className="hero-slide__product-halo hero-slide__product-halo--inner" aria-hidden="true" />
             <div className="hero-slide__product-float">
               <div className={`hero-slide__product-scale${isDuo ? ' hero-slide__product-scale--duo' : ''}`}>
-                <img
-                  className={`hero-slide__product-img${cutoutClass}${isDuo ? ' hero-slide__product-img--primary' : ''}`}
-                  src={slide.productImage}
-                  alt={slide.productAlt}
-                  width={520}
-                  height={520}
-                  loading={isFirst ? 'eager' : 'lazy'}
-                />
-                {slide.productImageSecondary ? (
-                  <img
-                    className={`hero-slide__product-img${cutoutClass} hero-slide__product-img--secondary`}
-                    src={slide.productImageSecondary}
-                    alt={slide.productAltSecondary ?? ''}
-                    width={420}
-                    height={420}
-                    loading="lazy"
-                  />
+                {shouldLoad ? (
+                  <>
+                    <img
+                      className={`hero-slide__product-img${cutoutClass}${isDuo ? ' hero-slide__product-img--primary' : ''}`}
+                      src={slide.productImage}
+                      alt={slide.productAlt}
+                      width={520}
+                      height={520}
+                      loading={active || isFirst ? 'eager' : 'lazy'}
+                      decoding="async"
+                    />
+                    {slide.productImageSecondary ? (
+                      <img
+                        className={`hero-slide__product-img${cutoutClass} hero-slide__product-img--secondary`}
+                        src={slide.productImageSecondary}
+                        alt={slide.productAltSecondary ?? ''}
+                        width={420}
+                        height={420}
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    ) : null}
+                  </>
                 ) : null}
                 <span className="hero-slide__product-shine" aria-hidden="true" />
               </div>

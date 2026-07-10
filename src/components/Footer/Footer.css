@@ -195,11 +195,18 @@
 
 .footer__bottom {
   padding-block: var(--space-lg);
-  padding-bottom: calc(var(--space-lg) + env(safe-area-inset-bottom, 0px));
+  /* Espaço extra no mobile para o FAB do WhatsApp não cobrir o rodapé */
+  padding-bottom: calc(var(--space-lg) + env(safe-area-inset-bottom, 0px) + 4.5rem);
   display: flex;
   flex-direction: column;
   gap: var(--space-md);
   align-items: flex-start;
+}
+
+@media (min-width: 900px) {
+  .footer__bottom {
+    padding-bottom: calc(var(--space-lg) + env(safe-area-inset-bottom, 0px));
+  }
 }
 
 @media (min-width: 768px) {

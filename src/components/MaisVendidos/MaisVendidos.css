@@ -175,9 +175,15 @@
 }
 
 .mais-vendidos__slide {
-  flex: 0 0 min(78vw, 280px);
+  flex: 0 0 min(72vw, 260px);
   scroll-snap-align: start;
   min-width: 0;
+}
+
+@media (max-width: 389px) {
+  .mais-vendidos__slide {
+    flex: 0 0 min(78vw, 240px);
+  }
 }
 
 @media (min-width: 600px) {

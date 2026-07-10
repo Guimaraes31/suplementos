@@ -4,12 +4,12 @@
  */
 export const images = {
   brand: {
-    logo: '/images/brand/logo.png',
-    heroEmblem: '/images/brand/hero-emblem.png',
+    logo: '/images/brand/logo.webp',
+    heroEmblem: '/images/brand/hero-emblem.webp',
   },
 
   /** @deprecated use brand.heroEmblem */
-  hero: '/images/brand/hero-emblem.png',
+  hero: '/images/brand/hero-emblem.webp',
 
   categories: {
     /** Pote de whey com scoop e pó */
@@ -28,8 +28,8 @@ export const images = {
 
   /** Potes premium hero (removebg: Btg5M creatina / H5q45 whey) */
   heroProducts: {
-    creatina: '/images/hero-products/creatina-hero.png',
-    whey: '/images/hero-products/whey-hero.png',
+    creatina: '/images/hero-products/creatina-hero.webp',
+    whey: '/images/hero-products/whey-hero.webp',
   },
 
   products: {

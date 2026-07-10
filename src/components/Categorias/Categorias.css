@@ -138,13 +138,43 @@ a.category-card {
 
 .category-card__image-wrap {
   position: relative;
-  aspect-ratio: 3 / 4;
+  aspect-ratio: 1;
   overflow: hidden;
+}
+
+@media (min-width: 480px) {
+  .category-card__image-wrap {
+    aspect-ratio: 4 / 5;
+  }
 }
 
 @media (min-width: 600px) {
   .category-card__image-wrap {
     aspect-ratio: 4 / 3;
+  }
+}
+
+@media (max-width: 479px) {
+  .category-card:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .category-card:hover .category-card__image {
+    transform: none;
+  }
+
+  .category-card__desc {
+    display: none;
+  }
+
+  .category-card__body {
+    padding: 0.65rem 0.65rem 0.85rem;
+  }
+
+  .category-card__link {
+    margin-top: 0.35rem;
+    font-size: 0.625rem;
   }
 }
 

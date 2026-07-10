@@ -27,15 +27,29 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-sm);
+  gap: 0.5rem;
   width: 100%;
+  min-width: 0;
 }
 
 .navbar__logo {
   display: flex;
   align-items: center;
-  flex-shrink: 0;
+  flex-shrink: 1;
+  min-width: 0;
+  max-width: calc(100% - 6.5rem);
   transition: opacity var(--transition-fast);
+}
+
+@media (min-width: 480px) {
+  .navbar__inner {
+    gap: var(--space-sm);
+  }
+
+  .navbar__logo {
+    flex-shrink: 0;
+    max-width: none;
+  }
 }
 
 .navbar__logo:hover {
@@ -110,7 +124,8 @@
 .navbar__actions {
   display: flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: 0.125rem;
+  flex-shrink: 0;
 }
 
 @media (min-width: 480px) {

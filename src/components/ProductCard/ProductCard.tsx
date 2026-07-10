@@ -57,6 +57,7 @@ export default function ProductCard({ product, index = 0, animate = true, featur
           width={400}
           height={400}
           loading="lazy"
+          sizes="(max-width: 480px) 50vw, (max-width: 1100px) 33vw, 280px"
         />
         <div className="product-card__overlay" aria-hidden="true">
           <button

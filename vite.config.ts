@@ -10,4 +10,22 @@ export default defineConfig({
       interval: 1000,
     },
   },
+  build: {
+    cssCodeSplit: true,
+    target: 'es2020',
+    modulePreload: {
+      polyfill: false,
+    },
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('framer-motion')) return 'motion'
+            if (id.includes('react-router')) return 'router'
+            if (id.includes('react-dom') || id.includes('/react/')) return 'react'
+          }
+        },
+      },
+    },
+  },
 })

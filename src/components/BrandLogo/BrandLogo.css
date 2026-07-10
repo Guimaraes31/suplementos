@@ -1,7 +1,15 @@
 .brand-logo {
   display: inline-flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.5rem;
+  min-width: 0;
+  max-width: 100%;
+}
+
+@media (min-width: 480px) {
+  .brand-logo {
+    gap: 0.75rem;
+  }
 }
 
 .brand-logo__mark {
@@ -16,8 +24,8 @@
 }
 
 .brand-logo--navbar .brand-logo__mark {
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
 }
 
 @media (min-width: 480px) {
@@ -36,16 +44,24 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
+  min-width: 0;
 }
 
 .brand-logo__main {
   font-family: var(--font-display);
-  font-size: clamp(0.875rem, 3.5vw, 1.125rem);
+  font-size: clamp(0.75rem, 3.2vw, 1.125rem);
   font-weight: 500;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--color-white);
   line-height: 1;
+  white-space: nowrap;
+}
+
+@media (min-width: 480px) {
+  .brand-logo__main {
+    letter-spacing: 0.12em;
+  }
 }
 
 .brand-logo--footer .brand-logo__main {
@@ -54,10 +70,25 @@
 
 .brand-logo__sub {
   font-family: var(--font-body);
-  font-size: 0.625rem;
+  font-size: 0.5625rem;
   font-weight: 300;
-  letter-spacing: 0.28em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--color-gold);
   line-height: 1;
+  white-space: nowrap;
+}
+
+@media (min-width: 480px) {
+  .brand-logo__sub {
+    font-size: 0.625rem;
+    letter-spacing: 0.28em;
+  }
+}
+
+/* Telas bem estreitas: só o nome principal */
+@media (max-width: 359px) {
+  .brand-logo--navbar .brand-logo__sub {
+    display: none;
+  }
 }
