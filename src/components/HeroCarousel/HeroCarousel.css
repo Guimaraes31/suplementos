@@ -1,35 +1,25 @@
 /* ─────────────────────────────────────────────
-   Hero Carousel — Nascimento Suplementos
-   Brand slide + product heroes (float / glow)
+   Hero Carousel — só banners de imagem (3 artes)
+   Proporção fixa 1824×560 → TrustBar e slides estáveis
    ───────────────────────────────────────────── */
 
 .hero-carousel {
   position: relative;
   background: var(--color-bg, #0a0a0a);
   outline: none;
-  /* Altura ÚNICA do hero — TrustBar abaixo não se mexe nos 4 slides */
-  --hero-viewport-h: min(70vh, 560px);
-}
-
-@media (min-width: 900px) {
-  .hero-carousel {
-    --hero-viewport-h: min(72vh, 640px);
-  }
-}
-
-@media (max-width: 479px) {
-  .hero-carousel {
-    --hero-viewport-h: min(62vh, 480px);
-  }
+  /* Mesma caixa para os 3 banners (arte 1824×560) */
+  --hero-banner-ratio: 1824 / 560;
 }
 
 .hero-carousel__viewport {
   position: relative;
   width: 100%;
-  height: var(--hero-viewport-h);
-  min-height: var(--hero-viewport-h);
-  max-height: var(--hero-viewport-h);
+  aspect-ratio: var(--hero-banner-ratio);
+  height: auto;
+  min-height: 0;
+  max-height: none;
   overflow: hidden;
+  background: #0a0a0a;
 }
 
 /* ── Slide shell — SEMPRE absolute na mesma caixa ── */
@@ -44,8 +34,8 @@
   pointer-events: none;
   overflow: hidden;
   transition:
-    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-    visibility 0.7s;
+    opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0.55s;
 }
 
 .hero-slide--active {
@@ -1025,16 +1015,14 @@
   }
 }
 
-/* ── Banner slides — mesma caixa do brand (TrustBar fixa) ─ */
+/* ── Banner slides ─ */
 
 .hero-slide__banner {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  background:
-    radial-gradient(ellipse 80% 70% at 50% 50%, rgba(197, 164, 110, 0.06) 0%, transparent 65%),
-    #0a0a0a;
+  background: #0a0a0a;
 }
 
 .hero-slide__banner-link {
@@ -1048,10 +1036,7 @@
   overflow: hidden;
 }
 
-/*
- * contain: arte inteira e legível dentro da altura fixa do hero.
- * Letterbox (faixas) se a arte for mais larga — evita zoom e altura diferente.
- */
+/* cover na caixa 1824/560 = arte encaixa sem letterbox (todas as artes têm essa proporção) */
 .hero-slide__banner-img {
   display: block;
   position: absolute;
@@ -1059,14 +1044,9 @@
   width: 100%;
   height: 100%;
   max-width: none;
-  object-fit: contain;
+  object-fit: cover;
   object-position: center center;
   transform: none;
-  opacity: 0.98;
-  transition: opacity 0.55s ease;
-}
-
-.hero-slide--active .hero-slide__banner-img {
   opacity: 1;
 }
 
@@ -1075,7 +1055,7 @@
   inset: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #141414 0%, #0a0a0a 100%);
+  background: #0a0a0a;
 }
 
 /* CTA discreto (a arte já tem botão verde) */

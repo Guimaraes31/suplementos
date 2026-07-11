@@ -1,62 +1,22 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { images } from '../../assets/images'
-import { storeConfig } from '../../config/store'
-import { productPath, shopPath } from '../../config/navigation'
+import { productPath } from '../../config/navigation'
 import './HeroCarousel.css'
 
 const INTERVAL_MS = 5000
 
-const whatsappOrientacao = `https://wa.me/${storeConfig.whatsapp}?text=${encodeURIComponent(
-  'Olá! Quero orientação para escolher o suplemento certo pro meu objetivo.',
-)}`
-
-type BrandSlide = {
-  kind: 'brand'
-  id: string
-  eyebrow: string
-  title: string
-  titleAccent: string
-  subtitle: string
-  primaryCta: { label: string; to: string }
-  secondaryCta: { label: string; href: string }
-  emblem: string
-  emblemAlt: string
-  chips: { label: string; value: string }[]
-}
-
 /** Banner promocional full-bleed (arte pronta da loja) */
 type BannerSlide = {
-  kind: 'banner'
   id: string
   image: string
   alt: string
   to: string
-  /** Texto acessível / SEO do link */
   label: string
 }
 
-type Slide = BrandSlide | BannerSlide
-
-const slides: Slide[] = [
+const slides: BannerSlide[] = [
   {
-    kind: 'brand',
-    id: 'brand',
-    eyebrow: 'Jardim São Carlos · Zona Sul, SP',
-    title: 'O suplemento certo.',
-    titleAccent: 'A orientação certa.',
-    subtitle: `${storeConfig.tagline}. Atendimento especializado, preço justo e entrega rápida — whey, creatina, pré-treino e mais, das marcas que você confia.`,
-    primaryCta: { label: 'Ver produtos', to: shopPath() },
-    secondaryCta: { label: 'Pedir orientação', href: whatsappOrientacao },
-    emblem: images.brand.heroEmblem,
-    emblemAlt: 'Emblema Nascimento Suplementos',
-    chips: [
-      { label: 'Zona Sul', value: 'SP' },
-      { label: 'Entrega', value: 'Rápida' },
-    ],
-  },
-  {
-    kind: 'banner',
     id: 'banner-insane-clown',
     image: images.banners.insaneClown,
     alt: 'Pré-treino Insane Clown Demons Lab — 3 sabores, design holográfico',
@@ -64,7 +24,6 @@ const slides: Slide[] = [
     label: 'Ver produto Insane Clown',
   },
   {
-    kind: 'banner',
     id: 'banner-gods-100',
     image: images.banners.gods100,
     alt: 'Gods 100% Whey concentrado Canibal Inc sabor morango — novo lançamento',
@@ -72,7 +31,6 @@ const slides: Slide[] = [
     label: 'Ver produto Gods 100% Whey',
   },
   {
-    kind: 'banner',
     id: 'banner-creatina-darkness',
     image: images.banners.creatinaDarkness,
     alt: 'Creatina Darkness 300g — pure creatine monohydrate',
@@ -104,7 +62,6 @@ export default function HeroCarousel() {
     return () => mq.removeEventListener('change', update)
   }, [])
 
-  // Autoplay contínuo — não pausa no hover (pedido do cliente)
   useEffect(() => {
     if (reduceMotion || !playing) return
 
@@ -127,13 +84,14 @@ export default function HeroCarousel() {
       id="inicio"
       className={[
         'hero-carousel',
+        'hero-carousel--banners-only',
         playing && !reduceMotion ? 'hero-carousel--playing' : '',
         reduceMotion ? 'hero-carousel--reduced' : '',
       ]
         .filter(Boolean)
         .join(' ')}
       aria-roledescription="carousel"
-      aria-label="Destaques da loja"
+      aria-label="Promoções da loja"
       tabIndex={0}
       onKeyDown={(e) => {
         if (e.key === 'ArrowRight') {
@@ -158,21 +116,16 @@ export default function HeroCarousel() {
       <div className="hero-carousel__viewport">
         {slides.map((slide, i) => {
           const active = i === index
-          // Carrega o ativo e vizinhos para o swipe não “piscar”
           const shouldLoad = active || Math.abs(i - index) <= 1 || i === 0
           return (
             <article
               key={slide.id}
-              className={`hero-slide hero-slide--${slide.kind} ${active ? 'hero-slide--active' : ''}`}
+              className={`hero-slide hero-slide--banner ${active ? 'hero-slide--active' : ''}`}
               aria-roledescription="slide"
               aria-label={`${i + 1} de ${slides.length}`}
               aria-hidden={active ? undefined : true}
             >
-              {slide.kind === 'brand' ? (
-                <BrandSlideView slide={slide} isFirst={i === 0} shouldLoad={shouldLoad} />
-              ) : (
-                <BannerSlideView slide={slide} isFirst={i === 0} shouldLoad={shouldLoad} active={active} />
-              )}
+              <BannerSlideView slide={slide} isFirst={i === 0} shouldLoad={shouldLoad} active={active} />
             </article>
           )
         })}
@@ -223,90 +176,6 @@ export default function HeroCarousel() {
   )
 }
 
-function BrandSlideView({
-  slide,
-  isFirst,
-  shouldLoad,
-}: {
-  slide: BrandSlide
-  isFirst: boolean
-  shouldLoad: boolean
-}) {
-  const TitleTag = isFirst ? 'h1' : 'h2'
-
-  return (
-    <div className="hero-slide__brand">
-      <div className="hero-slide__brand-glow" aria-hidden="true" />
-      <div className="hero-slide__brand-ring hero-slide__brand-ring--outer" aria-hidden="true" />
-      <div className="hero-slide__brand-ring hero-slide__brand-ring--inner" aria-hidden="true" />
-
-      <div className="container hero-slide__grid">
-        <div className="hero-slide__copy">
-          <div className="hero-slide__eyebrow">
-            <span className="hero-slide__eyebrow-line" aria-hidden="true" />
-            <span className="hero-slide__eyebrow-text">{slide.eyebrow}</span>
-          </div>
-
-          <TitleTag className="hero-slide__title">
-            {slide.title}
-            <br />
-            <em>{slide.titleAccent}</em>
-          </TitleTag>
-
-          <p className="hero-slide__sub">{slide.subtitle}</p>
-
-          <div className="hero-slide__cta-group">
-            <Link to={slide.primaryCta.to} className="hero-slide__cta">
-              {slide.primaryCta.label}
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-                <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </Link>
-            <a
-              href={slide.secondaryCta.href}
-              className="hero-slide__cta-secondary"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {slide.secondaryCta.label}
-            </a>
-          </div>
-        </div>
-
-        <div className="hero-slide__visual hero-slide__visual--emblem">
-          <div className="hero-slide__emblem-stage">
-            <div className="hero-slide__emblem-glow" aria-hidden="true" />
-            <div className="hero-slide__emblem-ring" aria-hidden="true" />
-            {shouldLoad ? (
-              <img
-                className="hero-slide__emblem"
-                src={slide.emblem}
-                alt={slide.emblemAlt}
-                width={480}
-                height={480}
-                loading={isFirst ? 'eager' : 'lazy'}
-                decoding="async"
-                fetchPriority={isFirst ? 'high' : 'auto'}
-              />
-            ) : (
-              <div className="hero-slide__emblem" aria-hidden="true" />
-            )}
-            {slide.chips.map((chip, idx) => (
-              <div
-                key={chip.label}
-                className={`hero-slide__chip hero-slide__chip--${idx === 0 ? 'left' : 'right'}`}
-              >
-                <span className="hero-slide__chip-label">{chip.label}</span>
-                <span className="hero-slide__chip-value">{chip.value}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
 function BannerSlideView({
   slide,
   isFirst,
@@ -326,11 +195,11 @@ function BannerSlideView({
             className="hero-slide__banner-img"
             src={slide.image}
             alt={slide.alt}
-            width={1600}
-            height={600}
+            width={1824}
+            height={560}
             loading={active || isFirst ? 'eager' : 'lazy'}
             decoding="async"
-            fetchPriority={active ? 'high' : 'auto'}
+            fetchPriority={active || isFirst ? 'high' : 'auto'}
           />
         ) : (
           <div className="hero-slide__banner-placeholder" aria-hidden="true" />
