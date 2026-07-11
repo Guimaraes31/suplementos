@@ -2,6 +2,29 @@
   padding-block: var(--space-2xl);
 }
 
+@media (max-width: 767px) {
+  .home-teaser__header {
+    margin-bottom: var(--space-md);
+  }
+
+  .home-teaser__subtitle {
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+
+  .home-teaser__pills {
+    gap: 0.4rem;
+    margin-bottom: var(--space-md);
+  }
+
+  .home-teaser__pill {
+    min-height: 40px;
+    padding: 0.4rem 0.85rem;
+    font-size: 0.8125rem;
+  }
+}
+
 .home-teaser__header {
   text-align: center;
   max-width: 560px;

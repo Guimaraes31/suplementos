@@ -5,6 +5,26 @@
   overflow: hidden;
 }
 
+@media (max-width: 767px) {
+  .mais-vendidos__header {
+    margin-bottom: var(--space-md);
+    gap: 0.25rem;
+  }
+
+  .mais-vendidos__eyebrow {
+    margin-bottom: 0.25rem;
+  }
+
+  .mais-vendidos__subtitle {
+    margin-top: 0.2rem;
+    font-size: 0.8125rem;
+  }
+
+  .mais-vendidos__glow {
+    display: none;
+  }
+}
+
 .mais-vendidos__glow {
   position: absolute;
   top: 50%;
@@ -151,12 +171,15 @@
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-x: contain;
-  touch-action: pan-x;
+  /* pan-y + pan-x: scroll vertical da página não compete com o carrossel */
+  touch-action: pan-x pan-y;
   cursor: grab;
   scrollbar-width: none;
   padding-bottom: var(--space-sm);
   margin-inline: calc(-1 * var(--container-padding));
   padding-inline: var(--container-padding);
+  /* Acelera paint do carrossel no mobile */
+  contain: content;
 }
 
 .mais-vendidos__track::-webkit-scrollbar {

@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion'
 import './TrustBar.css'
 
 const trustItems = [
@@ -51,21 +50,14 @@ export default function TrustBar() {
     <section className="trust-bar" aria-label="Diferenciais da loja">
       <div className="container">
         <div className="trust-bar__grid">
-          {trustItems.map((item, i) => (
-            <motion.div
-              key={item.label}
-              className="trust-bar__item"
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-40px' }}
-              transition={{ duration: 0.5, delay: i * 0.08, ease: [0.4, 0, 0.2, 1] as const }}
-            >
+          {trustItems.map((item) => (
+            <div key={item.label} className="trust-bar__item">
               <div className="trust-bar__icon">{item.icon}</div>
               <div className="trust-bar__text">
                 <span className="trust-bar__value">{item.value}</span>
                 <span className="trust-bar__label">{item.label}</span>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

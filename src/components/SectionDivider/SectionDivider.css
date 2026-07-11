@@ -9,6 +9,17 @@
   padding-inline: var(--container-padding);
 }
 
+@media (max-width: 767px) {
+  .section-divider__label {
+    font-size: 0.5rem;
+    letter-spacing: 0.2em;
+  }
+
+  .section-divider__line {
+    max-width: 56px;
+  }
+}
+
 .section-divider__line {
   flex: 1;
   max-width: 160px;

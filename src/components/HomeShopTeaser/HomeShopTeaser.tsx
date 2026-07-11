@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom'
-import { motion } from 'framer-motion'
 import { CATEGORIES } from '../../config/categories'
 import { shopPath, categoryPath } from '../../config/navigation'
 import './HomeShopTeaser.css'
@@ -22,19 +21,12 @@ export default function HomeShopTeaser() {
         </header>
 
         <div className="home-teaser__pills" role="list">
-          {CATEGORIES.map((cat, i) => (
-            <motion.div
-              key={cat.slug}
-              role="listitem"
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.05, duration: 0.4 }}
-            >
+          {CATEGORIES.map((cat) => (
+            <div key={cat.slug} role="listitem">
               <Link to={categoryPath(cat.slug)} className="home-teaser__pill">
                 {cat.label}
               </Link>
-            </motion.div>
+            </div>
           ))}
         </div>
 

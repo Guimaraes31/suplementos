@@ -1,6 +1,5 @@
 import { useRef, useState, useEffect, useCallback, type PointerEvent as ReactPointerEvent } from 'react'
 import { Link } from 'react-router-dom'
-import { motion } from 'framer-motion'
 import { getBestSellers } from '../../cms/products'
 import { shopPath } from '../../config/navigation'
 import ProductCard from '../ProductCard/ProductCard'
@@ -153,13 +152,7 @@ export default function MaisVendidos() {
           </div>
         </header>
 
-        <motion.div
-          className="mais-vendidos__track-wrap"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
+        <div className="mais-vendidos__track-wrap">
           <div
             className={`mais-vendidos__track ${isDragging ? 'mais-vendidos__track--dragging' : ''}`}
             ref={trackRef}
@@ -172,7 +165,8 @@ export default function MaisVendidos() {
           >
             {bestSellers.map((product, i) => (
               <div key={product.id} className="mais-vendidos__slide">
-                <ProductCard product={product} index={i} featured />
+                {/* animate=false: evita jank de Framer no scroll mobile */}
+                <ProductCard product={product} index={i} featured animate={false} />
               </div>
             ))}
           </div>
@@ -208,7 +202,7 @@ export default function MaisVendidos() {
               </svg>
             </button>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   )
