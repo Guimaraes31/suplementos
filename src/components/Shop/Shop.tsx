@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { PRODUCT_CATEGORIES, type ProductCategory, type SortOption } from '../../cms/types'
@@ -44,6 +44,8 @@ export default function Shop() {
   const [filterOpen, setFilterOpen] = useState(false)
   const [searchParams, setSearchParams] = useSearchParams()
   const isMobileFilter = useIsMobileFilter()
+  const pillsScrollRef = useRef<HTMLDivElement>(null)
+  const activePillRef = useRef<HTMLButtonElement>(null)
 
   const filteredProducts = useMemo(
     () => filterProducts(
@@ -56,6 +58,24 @@ export default function Shop() {
     ),
     [filters],
   )
+
+  /** Mantém o chip ativo (ex.: Acessórios) inteiro e centralizado na trilha — sem cortar na borda da página */
+  useEffect(() => {
+    const pill = activePillRef.current
+    const track = pillsScrollRef.current
+    if (!pill || !track) return
+
+    const frame = requestAnimationFrame(() => {
+      const trackRect = track.getBoundingClientRect()
+      const pillRect = pill.getBoundingClientRect()
+      const pillCenter = pillRect.left + pillRect.width / 2
+      const trackCenter = trackRect.left + trackRect.width / 2
+      const delta = pillCenter - trackCenter
+      track.scrollBy({ left: delta, behavior: 'smooth' })
+    })
+
+    return () => cancelAnimationFrame(frame)
+  }, [filters.category])
 
   const syncUrl = (next: {
     category?: ProductCategory | 'Todos'
@@ -214,18 +234,27 @@ export default function Shop() {
             )}
           </button>
 
-          <div className="shop__pills-scroll" role="group" aria-label="Filtrar por categoria">
-            {categoryFilters.map((cat) => (
-              <button
-                key={cat}
-                type="button"
-                className={`shop__pill ${filters.category === cat ? 'shop__pill--active' : ''}`}
-                onClick={() => handleCategory(cat)}
-                aria-pressed={filters.category === cat}
-              >
-                {cat}
-              </button>
-            ))}
+          <div
+            ref={pillsScrollRef}
+            className="shop__pills-scroll"
+            role="group"
+            aria-label="Filtrar por categoria"
+          >
+            {categoryFilters.map((cat) => {
+              const isActive = filters.category === cat
+              return (
+                <button
+                  key={cat}
+                  type="button"
+                  ref={isActive ? activePillRef : undefined}
+                  className={`shop__pill ${isActive ? 'shop__pill--active' : ''}`}
+                  onClick={() => handleCategory(cat)}
+                  aria-pressed={isActive}
+                >
+                  {cat}
+                </button>
+              )
+            })}
           </div>
         </div>
 

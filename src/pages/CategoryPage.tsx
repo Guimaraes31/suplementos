@@ -54,10 +54,11 @@ export default function CategoryPage() {
             <SafeImage
               className="category-page__hero-image"
               src={category.image}
-              alt={category.label}
-              width={640}
-              height={400}
+              alt={`Produto da categoria ${category.label}`}
+              width={522}
+              height={391}
               loading="eager"
+              sizes="(max-width: 899px) 92vw, 48vw"
             />
           </div>
           <div className="category-page__hero-content">

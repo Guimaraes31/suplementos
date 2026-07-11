@@ -2,9 +2,11 @@ export const PRODUCT_CATEGORIES = [
   'Whey Protein',
   'Creatina',
   'Pré-Treino',
-  'Pós-Treino',
+  'Hipercalóricos',
+  'Aminoácidos',
   'Vitaminas',
-  'Packs',
+  'Snacks',
+  'Acessórios',
 ] as const
 
 export type ProductCategory = (typeof PRODUCT_CATEGORIES)[number]

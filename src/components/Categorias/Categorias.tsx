@@ -62,10 +62,11 @@ export default function Categorias() {
                   <SafeImage
                     className="category-card__image"
                     src={cat.image}
-                    alt={cat.label}
-                    width={400}
-                    height={300}
+                    alt={`Produto da categoria ${cat.label}`}
+                    width={522}
+                    height={391}
                     loading="lazy"
+                    sizes="(max-width: 479px) 45vw, (max-width: 1023px) 40vw, 360px"
                   />
                 </div>
                 <div className="category-card__body">

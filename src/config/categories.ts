@@ -1,4 +1,3 @@
-import { images } from '../assets/images'
 import type { ProductCategory } from '../cms/types'
 
 export interface CategoryMeta {
@@ -10,8 +9,21 @@ export interface CategoryMeta {
   /** Conteúdo SEO / orientação — só o que a loja pode afirmar */
   seoIntro: string
   seoTips: string[]
+  /** Foto de um produto real da categoria */
   image: string
 }
+
+/** Imagens de categorias = produtos reais do catálogo (evita stock genérico). */
+const categoryProductImages = {
+  whey: '/images/products/whey-protein-concentrado-900g-dark-whey.jpg',
+  creatina: '/images/products/creatina-monohidratada-300g-pura.jpg',
+  preTreino: '/images/products/evora-vulcan-300g.jpg',
+  hipercaloricos: '/images/products/captain-gainer-3kg.jpg',
+  aminoacidos: '/images/products/beta-alanina-pure-integralmedica-123g.jpg',
+  vitaminas: '/images/products/vitapure-super-60cp.jpg',
+  snacks: '/images/products/protein-crisp-bar-45g.jpg',
+  acessorios: '/images/products/galao-dark-2-2-l.jpg',
+} as const
 
 export const CATEGORIES: CategoryMeta[] = [
   {
@@ -20,13 +32,13 @@ export const CATEGORIES: CategoryMeta[] = [
     label: 'Whey Protein',
     shortDescription: 'Proteína pro dia a dia de treino — escolha com orientação, sem chute.',
     seoIntro:
-      'Whey protein é um dos suplementos mais pedidos na Nascimento. Ajudamos você a escolher o formato e o sabor que fazem sentido pro seu objetivo e rotina — sem pressão.',
+      'Whey protein e outras proteínas da Nascimento Suplementos. Ajudamos você a escolher o formato e o sabor que fazem sentido pro seu objetivo e rotina — sem pressão.',
     seoTips: [
-      'Diga se prefere concentrado, isolado ou plant-based.',
+      'Diga se prefere concentrado, isolado, beef ou proteína de ovo.',
       'Combine com creatina se o foco for força e consistência no treino.',
       'Em dúvida de dose ou horário? Peça orientação no WhatsApp.',
     ],
-    image: images.categories.whey,
+    image: categoryProductImages.whey,
   },
   {
     slug: 'creatina',
@@ -34,13 +46,13 @@ export const CATEGORIES: CategoryMeta[] = [
     label: 'Creatina',
     shortDescription: 'Força e performance. A gente te ajuda a achar a opção certa pro seu uso.',
     seoIntro:
-      'Creatina monohidratada e outras opções para quem treina com foco em força e performance. Na loja, orientamos uso simples e contínuo — sem complicar.',
+      'Creatina monohidratada, Crealkaline, Darkness e outras opções para quem treina com foco em força e performance. Na loja, orientamos uso simples e contínuo — sem complicar.',
     seoTips: [
       'Uso diário costuma ser mais importante do que “fase de carga” complexa.',
-      'Pergunte se cápsula ou pó encaixa melhor na sua rotina.',
+      'Pergunte se monohidratada, Crealkaline ou outra opção encaixa melhor.',
       'Combine com whey se quiser montar um kit básico.',
     ],
-    image: images.categories.creatina,
+    image: categoryProductImages.creatina,
   },
   {
     slug: 'pre-treino',
@@ -48,27 +60,41 @@ export const CATEGORIES: CategoryMeta[] = [
     label: 'Pré-Treino',
     shortDescription: 'Energia e foco no treino. Tem dúvida de dose ou tipo? Pergunte antes de comprar.',
     seoIntro:
-      'Pré-treinos para energia e foco. Nem todo mundo precisa da fórmula mais forte — por isso orientamos antes de vender, para você não gastar à toa nem passar do ponto.',
+      'Pré-treinos Darkness, Demons Lab, Integralmédica e mais. Nem todo mundo precisa da fórmula mais forte — por isso orientamos antes de vender, para você não gastar à toa nem passar do ponto.',
     seoTips: [
       'Conte se você é sensível à cafeína.',
       'Evite usar tarde da noite se o sono for prioridade.',
-      'Prefere estímulo leve? Peça opção moderada.',
+      'Prefere estímulo leve ou sem cafeína? Peça opção moderada ou Vasculor.',
     ],
-    image: images.categories.preTreino,
+    image: categoryProductImages.preTreino,
   },
   {
-    slug: 'pos-treino',
-    name: 'Pós-Treino',
-    label: 'Pós-Treino',
-    shortDescription: 'Recuperação depois do treino — combine com o resto da sua rotina.',
+    slug: 'hipercaloricos',
+    name: 'Hipercalóricos',
+    label: 'Hipercalóricos',
+    shortDescription: 'Ganho de massa com alto aporte calórico — com orientação da loja.',
     seoIntro:
-      'Pós-treino e aminoácidos para quem quer fechar o treino com suporte extra. Montamos combinações com whey e creatina quando faz sentido.',
+      'Hipercalóricos e mass gainers para quem busca ganho de peso e volume. Montamos combinações com creatina e pré-treino quando faz sentido.',
     seoTips: [
-      'Refeição completa continua sendo a base da recuperação.',
-      'BCAA e recovery são complementos — não obrigatórios pra todo mundo.',
+      'Refeição completa continua sendo a base do ganho de massa.',
+      'Hipercalórico é complemento — não substitui alimentação.',
       'Peça indicação se estiver montando a rotina do zero.',
     ],
-    image: images.categories.posTreino,
+    image: categoryProductImages.hipercaloricos,
+  },
+  {
+    slug: 'aminoacidos',
+    name: 'Aminoácidos',
+    label: 'Aminoácidos',
+    shortDescription: 'Beta-alanina, glutamina e mais para complementar a rotina de treino.',
+    seoIntro:
+      'Aminoácidos e isolados para quem quer suporte extra na recuperação e na performance. A gente orienta o que faz sentido pro seu caso.',
+    seoTips: [
+      'Não são obrigatórios pra todo mundo — pergunte antes de montar o kit.',
+      'Combine com whey e creatina se quiser uma base completa.',
+      'Dúvida de dose? Chame no WhatsApp.',
+    ],
+    image: categoryProductImages.aminoacidos,
   },
   {
     slug: 'vitaminas-minerais',
@@ -76,27 +102,41 @@ export const CATEGORIES: CategoryMeta[] = [
     label: 'Vitaminas & Minerais',
     shortDescription: 'Suporte nutricional. Oriente-se para não gastar com o que você não precisa.',
     seoIntro:
-      'Vitaminas, minerais e ômega 3 para complementar a alimentação. A ideia é orientar: nem todo suplemento “de prateleira” é prioridade pro seu caso.',
+      'Vitaminas, multivitamínicos e coenzima Q10 para complementar a alimentação. A ideia é orientar: nem todo suplemento “de prateleira” é prioridade pro seu caso.',
     seoTips: [
       'Suplemento não substitui avaliação profissional quando há carência ou condição de saúde.',
-      'Multivitamínico, D3 e ômega 3 estão entre os mais pedidos.',
+      'Multivitamínico e Coq-10 estão entre as opções da loja.',
       'Dúvida entre opções? Chame no WhatsApp.',
     ],
-    image: images.categories.vitaminas,
+    image: categoryProductImages.vitaminas,
   },
   {
-    slug: 'packs-especiais',
-    name: 'Packs',
-    label: 'Packs Especiais',
-    shortDescription: 'Combinações prontas com bom custo-benefício. Ideal se você quer começar simples.',
+    slug: 'snacks',
+    name: 'Snacks',
+    label: 'Snacks & Barras',
+    shortDescription: 'Barras e snacks proteicos para o dia a dia.',
     seoIntro:
-      'Packs e kits para quem quer menos dúvida na hora de montar a rotina: massa, definição ou iniciante. Bom ponto de partida com orientação da loja.',
+      'Snacks e barras proteicas para quem quer praticidade entre refeições ou no pós-treino — sem complicar a rotina.',
     seoTips: [
-      'Ideal se você não quer escolher item por item.',
-      'Podemos ajustar o kit no WhatsApp conforme seu objetivo.',
-      'Compare com comprar separado se preferir montar do zero.',
+      'Confira sabores e estoque no WhatsApp.',
+      'Ideal para levar na bolsa ou no trabalho.',
+      'Combine com whey se quiser mais proteína no dia.',
     ],
-    image: images.categories.packs,
+    image: categoryProductImages.snacks,
+  },
+  {
+    slug: 'acessorios',
+    name: 'Acessórios',
+    label: 'Acessórios',
+    shortDescription: 'Galões, coqueteleiras e itens pra facilitar o treino.',
+    seoIntro:
+      'Acessórios para hidratação e preparo de shake: galões e coqueteleiras das marcas que você já encontra na loja.',
+    seoTips: [
+      'Galão ajuda a manter a hidratação ao longo do dia.',
+      'Coqueteleira facilita o preparo do whey e pré-treino.',
+      'Pergunte no WhatsApp se tiver dúvida de tamanho.',
+    ],
+    image: categoryProductImages.acessorios,
   },
 ]
 

@@ -1,8 +1,17 @@
 .safe-image {
   opacity: 0;
   transition: opacity 0.4s ease;
+  /* Avoid layout glitches when used as absolute fill (category cards on mobile) */
+  max-width: none;
 }
 
 .safe-image--loaded {
   opacity: 1;
+}
+
+/* If load never fires (cached), still show after a frame via @supports not needed —
+   browsers fire onLoad for cache; keep fallback visible if broken */
+img.safe-image:not(.safe-image--loaded) {
+  /* subtle skeleton so empty absolute boxes aren't "invisible bug" */
+  background: transparent;
 }

@@ -6,50 +6,57 @@ const categoryDefaults: Record<ProductCategory, ProductMeta> = {
   'Whey Protein': {
     benefits: ['Proteína pro treino e recuperação', 'Vários sabores e formatos', 'Peça indicação se estiver em dúvida'],
     flavors: ['Chocolate', 'Baunilha', 'Morango'],
-    sizes: ['450g', '900g', '1kg'],
+    sizes: ['Sachê', '900g', '1kg'],
   },
   Creatina: {
     benefits: ['Apoio a força e performance', 'Uso diário simples', 'Orientação na loja ou WhatsApp'],
-    sizes: ['150g', '300g'],
+    sizes: ['300g', '500g'],
   },
   'Pré-Treino': {
     benefits: ['Energia e foco no treino', 'Opções com e sem estimulantes fortes', 'Pergunte antes de escolher'],
-    flavors: ['Fruit Punch', 'Limão', 'Uva'],
-    sizes: ['200g', '300g'],
+    flavors: ['Fruit Punch', 'Frutas Vermelhas', 'Limão'],
+    sizes: ['150g', '300g', '500g'],
   },
-  'Pós-Treino': {
-    benefits: ['Apoio à recuperação', 'Complementa a refeição pós-treino', 'Combine com whey e creatina'],
-    flavors: ['Tangerina', 'Frutas Vermelhas'],
-    sizes: ['500g', '1kg'],
+  Hipercalóricos: {
+    benefits: ['Alto valor calórico para ganho de massa', 'Combina proteína e carboidrato', 'Ideal com orientação da loja'],
+    flavors: ['Chocolate', 'Morango', 'Baunilha'],
+    sizes: ['3kg'],
+  },
+  Aminoácidos: {
+    benefits: ['Apoio à recuperação e performance', 'Complementa a rotina de treino', 'Combine com whey e creatina'],
+    sizes: ['123g', '300g'],
   },
   Vitaminas: {
     benefits: ['Suporte nutricional do dia a dia', 'Complementa a alimentação', 'Não substitua avaliação profissional'],
-    sizes: ['60 cápsulas', '90 cápsulas', '120 cápsulas'],
+    sizes: ['30 cápsulas', '60 cápsulas'],
   },
-  Packs: {
-    benefits: ['Combinação pronta para começar', 'Bom custo-benefício', 'Menos dúvida na hora de montar o kit'],
-    sizes: ['Kit Padrão', 'Kit Completo'],
+  Snacks: {
+    benefits: ['Praticidade no dia a dia', 'Opção proteica entre refeições', 'Confira sabores disponíveis na loja'],
+    flavors: ['Caramelo', 'Chocolate'],
+    sizes: ['Unidade'],
+  },
+  Acessórios: {
+    benefits: ['Praticidade no treino e na hidratação', 'Complementa sua rotina de suplementação', 'Peça no WhatsApp se tiver dúvida'],
+    sizes: ['Padrão'],
   },
 }
 
 const metaById: Partial<Record<string, Partial<ProductMeta>>> = {
-  'whey-gold-isolate': {
-    benefits: ['Isolado de rápida absorção', 'Boa opção pós-treino', 'Confira sabor e tamanho com a loja'],
-    flavors: ['Chocolate', 'Baunilha', 'Cookies & Cream'],
-    sizes: ['450g', '900g'],
-  },
-  'creatina-monohidratada': {
+  'creatina-monohidratada-300g-pura': {
     benefits: ['Monohidratada clássica', 'Uso diário simples', 'Um dos mais pedidos da loja'],
-    sizes: ['150g', '300g'],
+    sizes: ['300g'],
   },
-  'pre-treino-fury': {
-    benefits: ['Mais energia no treino', 'Ideal se você busca intensidade', 'Pergunte se é o perfil certo pra você'],
-    flavors: ['Black Energy', 'Limão'],
-    sizes: ['200g', '300g'],
+  'whey-protein-concentrado-900g-dark-whey': {
+    benefits: ['Whey concentrado Darkness', 'Boa opção pós-treino', 'Confira sabor e estoque com a loja'],
+    sizes: ['900g'],
   },
-  'pack-massa-muscular': {
-    benefits: ['Whey + creatina + pré-treino', 'Kit para quem busca ganho de massa', 'Economia em relação a comprar separado'],
-    sizes: ['Kit Padrão', 'Kit Completo'],
+  'p-w-psichotic-dragon-500g': {
+    benefits: ['Pré-treino hardcore', 'Ideal se você busca intensidade', 'Pergunte se é o perfil certo pra você'],
+    sizes: ['500g', 'Sachê 10g'],
+  },
+  'captain-gainer-3kg': {
+    benefits: ['Hipercalórico para ganho de massa', 'Alto aporte calórico', 'Bom custo-benefício em 3kg'],
+    sizes: ['3kg'],
   },
 }
 

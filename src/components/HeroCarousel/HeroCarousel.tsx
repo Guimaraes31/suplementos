@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { images } from '../../assets/images'
 import { storeConfig } from '../../config/store'
-import { shopPath } from '../../config/navigation'
+import { productPath, shopPath } from '../../config/navigation'
 import './HeroCarousel.css'
 
 const INTERVAL_MS = 5000
@@ -25,27 +25,18 @@ type BrandSlide = {
   chips: { label: string; value: string }[]
 }
 
-type ProductSlide = {
-  kind: 'product'
+/** Banner promocional full-bleed (arte pronta da loja) */
+type BannerSlide = {
+  kind: 'banner'
   id: string
-  badge: string
-  title: string
-  titleAccent: string
-  subtitle: string
-  cta: string
+  image: string
+  alt: string
   to: string
-  bgImage: string
-  productImage: string
-  productAlt: string
-  /** Segundo pote (ex.: combo whey + creatina) */
-  productImageSecondary?: string
-  productAltSecondary?: string
-  /** Potes com fundo claro / isolados */
-  cutout?: boolean
-  promoSeal?: string
+  /** Texto acessível / SEO do link */
+  label: string
 }
 
-type Slide = BrandSlide | ProductSlide
+type Slide = BrandSlide | BannerSlide
 
 const slides: Slide[] = [
   {
@@ -65,52 +56,28 @@ const slides: Slide[] = [
     ],
   },
   {
-    kind: 'product',
-    id: 'creatina',
-    badge: 'Mais pedido',
-    title: 'Creatina monohidratada.',
-    titleAccent: 'Base do shape.',
-    subtitle:
-      'O clássico que não sai de moda. Tire dúvida de dose e rotina no WhatsApp — sem gastar à toa.',
-    cta: 'Ver creatinas',
-    to: shopPath({ categoria: 'Creatina' }),
-    bgImage: images.categories.creatina,
-    productImage: images.heroProducts.creatina,
-    productAlt: 'Pote de creatina monohidratada',
-    cutout: true,
+    kind: 'banner',
+    id: 'banner-insane-clown',
+    image: images.banners.insaneClown,
+    alt: 'Pré-treino Insane Clown Demons Lab — 3 sabores, design holográfico',
+    to: productPath('pre-treino-insane-clown-350g-demons-lab'),
+    label: 'Ver produto Insane Clown',
   },
   {
-    kind: 'product',
-    id: 'whey',
-    badge: 'Performance',
-    title: 'Whey de verdade.',
-    titleAccent: 'Sem chute na compra.',
-    subtitle:
-      'Isolado e concentrado para o seu objetivo. Orientação antes de vender — monte o stack certo pro seu treino.',
-    cta: 'Ver whey protein',
-    to: shopPath({ categoria: 'Whey Protein' }),
-    bgImage: images.categories.whey,
-    productImage: images.heroProducts.whey,
-    productAlt: 'Pote de whey protein concentrado',
-    cutout: true,
+    kind: 'banner',
+    id: 'banner-gods-100',
+    image: images.banners.gods100,
+    alt: 'Gods 100% Whey concentrado Canibal Inc sabor morango — novo lançamento',
+    to: productPath('gods-100-900g'),
+    label: 'Ver produto Gods 100% Whey',
   },
   {
-    kind: 'product',
-    id: 'combo',
-    badge: 'Combo inteligente',
-    title: 'Whey + creatina.',
-    titleAccent: 'Kit essencial.',
-    subtitle:
-      'Comece com o essencial e peça orientação para ajustar doses e rotina. Prefere frete ou retirada? Combinamos no WhatsApp.',
-    cta: 'Montar meu kit',
-    to: shopPath({ sort: 'mais-vendidos' }),
-    bgImage: images.categories.packs,
-    productImage: images.heroProducts.whey,
-    productAlt: 'Pote de whey protein',
-    productImageSecondary: images.heroProducts.creatina,
-    productAltSecondary: 'Pote de creatina monohidratada',
-    cutout: true,
-    promoSeal: 'Cupom / frete · confira no WhatsApp',
+    kind: 'banner',
+    id: 'banner-creatina-darkness',
+    image: images.banners.creatinaDarkness,
+    alt: 'Creatina Darkness 300g — pure creatine monohydrate',
+    to: productPath('creatine-darkness-300g-100-pura'),
+    label: 'Ver produto Creatina Darkness',
   },
 ]
 
@@ -158,7 +125,13 @@ export default function HeroCarousel() {
   return (
     <section
       id="inicio"
-      className={`hero-carousel ${playing && !reduceMotion ? 'hero-carousel--playing' : ''} ${reduceMotion ? 'hero-carousel--reduced' : ''}`}
+      className={[
+        'hero-carousel',
+        playing && !reduceMotion ? 'hero-carousel--playing' : '',
+        reduceMotion ? 'hero-carousel--reduced' : '',
+      ]
+        .filter(Boolean)
+        .join(' ')}
       aria-roledescription="carousel"
       aria-label="Destaques da loja"
       tabIndex={0}
@@ -198,7 +171,7 @@ export default function HeroCarousel() {
               {slide.kind === 'brand' ? (
                 <BrandSlideView slide={slide} isFirst={i === 0} shouldLoad={shouldLoad} />
               ) : (
-                <ProductSlideView slide={slide} isFirst={i === 0} shouldLoad={shouldLoad} active={active} />
+                <BannerSlideView slide={slide} isFirst={i === 0} shouldLoad={shouldLoad} active={active} />
               )}
             </article>
           )
@@ -334,97 +307,41 @@ function BrandSlideView({
   )
 }
 
-function ProductSlideView({
+function BannerSlideView({
   slide,
   isFirst,
   shouldLoad,
   active,
 }: {
-  slide: ProductSlide
+  slide: BannerSlide
   isFirst: boolean
   shouldLoad: boolean
   active: boolean
 }) {
-  const TitleTag = isFirst ? 'h1' : 'h2'
-  const isDuo = Boolean(slide.productImageSecondary)
-  const cutoutClass = slide.cutout ? ' hero-slide__product-img--cutout' : ''
-
   return (
-    <div className="hero-slide__product">
-      <div className="hero-slide__media" aria-hidden="true">
+    <div className="hero-slide__banner">
+      <Link to={slide.to} className="hero-slide__banner-link" aria-label={slide.label}>
         {shouldLoad ? (
           <img
-            src={slide.bgImage}
-            alt=""
-            width={800}
-            height={450}
+            className="hero-slide__banner-img"
+            src={slide.image}
+            alt={slide.alt}
+            width={1600}
+            height={600}
             loading={active || isFirst ? 'eager' : 'lazy'}
             decoding="async"
+            fetchPriority={active ? 'high' : 'auto'}
           />
-        ) : null}
-        <div className="hero-slide__shade" />
-      </div>
-
-      <div className="container hero-slide__grid">
-        <div className="hero-slide__copy">
-          <span className="hero-slide__badge">{slide.badge}</span>
-          {slide.promoSeal ? (
-            <span className="hero-slide__seal">{slide.promoSeal}</span>
-          ) : null}
-
-          <TitleTag className="hero-slide__title">
-            {slide.title}
-            <br />
-            <em>{slide.titleAccent}</em>
-          </TitleTag>
-
-          <p className="hero-slide__sub">{slide.subtitle}</p>
-
-          <Link to={slide.to} className="hero-slide__cta">
-            {slide.cta}
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-              <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </Link>
-        </div>
-
-        <div className="hero-slide__visual hero-slide__visual--product">
-          <div className={`hero-slide__product-stage${isDuo ? ' hero-slide__product-stage--duo' : ''}`}>
-            <div className="hero-slide__product-glow" aria-hidden="true" />
-            <div className="hero-slide__product-halo hero-slide__product-halo--outer" aria-hidden="true" />
-            <div className="hero-slide__product-halo hero-slide__product-halo--inner" aria-hidden="true" />
-            <div className="hero-slide__product-float">
-              <div className={`hero-slide__product-scale${isDuo ? ' hero-slide__product-scale--duo' : ''}`}>
-                {shouldLoad ? (
-                  <>
-                    <img
-                      className={`hero-slide__product-img${cutoutClass}${isDuo ? ' hero-slide__product-img--primary' : ''}`}
-                      src={slide.productImage}
-                      alt={slide.productAlt}
-                      width={520}
-                      height={520}
-                      loading={active || isFirst ? 'eager' : 'lazy'}
-                      decoding="async"
-                    />
-                    {slide.productImageSecondary ? (
-                      <img
-                        className={`hero-slide__product-img${cutoutClass} hero-slide__product-img--secondary`}
-                        src={slide.productImageSecondary}
-                        alt={slide.productAltSecondary ?? ''}
-                        width={420}
-                        height={420}
-                        loading="lazy"
-                        decoding="async"
-                      />
-                    ) : null}
-                  </>
-                ) : null}
-                <span className="hero-slide__product-shine" aria-hidden="true" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+        ) : (
+          <div className="hero-slide__banner-placeholder" aria-hidden="true" />
+        )}
+        <span className="hero-slide__banner-cta">
+          Comprar agora
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+            <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </span>
+      </Link>
     </div>
   )
 }

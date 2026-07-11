@@ -99,6 +99,8 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 0.75rem;
+  /* Prevent grid children from overflowing viewport on mobile */
+  width: 100%;
 }
 
 @media (min-width: 480px) {
@@ -117,12 +119,24 @@
 a.category-card {
   color: inherit;
   text-decoration: none;
+  display: block;
+  height: 100%;
+  min-width: 0;
+}
+
+/* motion wrapper in grid must shrink correctly on mobile */
+.categorias__grid > * {
+  min-width: 0;
+  max-width: 100%;
 }
 
 .category-card {
   position: relative;
   display: flex;
   flex-direction: column;
+  height: 100%;
+  min-width: 0;
+  max-width: 100%;
   background: var(--color-bg-card);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
@@ -138,14 +152,15 @@ a.category-card {
 
 .category-card__image-wrap {
   position: relative;
-  aspect-ratio: 1;
+  width: 100%;
+  aspect-ratio: 1 / 1;
   overflow: hidden;
-}
-
-@media (min-width: 480px) {
-  .category-card__image-wrap {
-    aspect-ratio: 4 / 5;
-  }
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 45%, rgba(197, 164, 110, 0.08) 0%, transparent 70%),
+    var(--color-bg-elevated);
+  /* Isolation avoids Safari paint bugs with absolute children */
+  isolation: isolate;
+  flex-shrink: 0;
 }
 
 @media (min-width: 600px) {
@@ -182,29 +197,44 @@ a.category-card {
   content: '';
   position: absolute;
   inset: 0;
+  z-index: 1;
+  pointer-events: none;
   background: linear-gradient(
     180deg,
-    transparent 40%,
-    rgba(10, 10, 10, 0.85) 100%
+    transparent 55%,
+    rgba(10, 10, 10, 0.55) 100%
   );
   transition: opacity var(--transition-smooth);
 }
 
 .category-card:hover .category-card__image-wrap::after {
-  opacity: 0.9;
+  opacity: 0.85;
 }
 
+/* Product photos: contain so potes/embalagens não cortam no mobile */
 .category-card__image {
   position: absolute;
   inset: 0;
+  z-index: 0;
+  display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  max-width: none;
+  object-fit: contain;
+  object-position: center center;
+  padding: 0.65rem;
+  box-sizing: border-box;
   transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+@media (min-width: 600px) {
+  .category-card__image {
+    padding: 0.85rem 1rem;
+  }
+}
+
 .category-card:hover .category-card__image {
-  transform: scale(1.05);
+  transform: scale(1.04);
 }
 
 .category-card__number {
