@@ -1,13 +1,12 @@
-import { lazy, Suspense, useRef, useState, type MouseEvent } from 'react'
+import { useRef, useState, type MouseEvent } from 'react'
 import { Link } from 'react-router-dom'
+import { motion } from 'framer-motion'
 import type { Product } from '../../cms/types'
 import { productPath } from '../../config/navigation'
 import { useCart } from '../../context/CartContext'
 import { formatPrice, formatInstallment } from '../../utils/format'
 import SafeImage from '../SafeImage/SafeImage'
 import './ProductCard.css'
-
-const ProductCardMotion = lazy(() => import('./ProductCardMotion'))
 
 interface ProductCardProps {
   product: Product
@@ -100,8 +99,13 @@ export default function ProductCard({ product, index = 0, animate = true, featur
   if (!animate) return card
 
   return (
-    <Suspense fallback={card}>
-      <ProductCardMotion index={index}>{card}</ProductCardMotion>
-    </Suspense>
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-40px' }}
+      transition={{ duration: 0.5, delay: index * 0.05, ease: [0.4, 0, 0.2, 1] as const }}
+    >
+      {card}
+    </motion.div>
   )
 }

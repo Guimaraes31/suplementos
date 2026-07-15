@@ -1,13 +1,13 @@
 import { useRef, useState, useEffect, useCallback, type PointerEvent as ReactPointerEvent } from 'react'
 import { Link } from 'react-router-dom'
-import { useMemo } from 'react'
 import { getBestSellers } from '../../cms/products'
 import { shopPath } from '../../config/navigation'
 import ProductCard from '../ProductCard/ProductCard'
 import './MaisVendidos.css'
 
+const bestSellers = getBestSellers(6)
+
 export default function MaisVendidos() {
-  const bestSellers = useMemo(() => getBestSellers(6), [])
   const trackRef = useRef<HTMLDivElement>(null)
   const dragRef = useRef({
     active: false,
