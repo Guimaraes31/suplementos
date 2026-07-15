@@ -54,8 +54,7 @@ export default function MaisVendidos() {
   }
 
   const onPointerDown = (e: ReactPointerEvent<HTMLDivElement>) => {
-    // Só arrastar com mouse / pen; touch nativo do overflow-x
-    if (e.pointerType === 'touch') return
+    if ((e.target as HTMLElement).closest('button')) return
     const track = trackRef.current
     if (!track) return
     dragRef.current = {
@@ -74,7 +73,10 @@ export default function MaisVendidos() {
     const track = trackRef.current
     if (!drag.active || !track) return
     const dx = e.clientX - drag.startX
-    if (Math.abs(dx) > 4) drag.moved = true
+    if (Math.abs(dx) > 4) {
+      drag.moved = true
+      e.preventDefault()
+    }
     track.scrollLeft = drag.startScroll - dx
   }
 

@@ -9,10 +9,31 @@ export const NAV_LINKS = [
 
 export type NavLinkId = (typeof NAV_LINKS)[number]['id']
 
-/** Seções âncora só existem na home */
+/** Seções âncora só existem na home (ordem de aparição na página) */
 export const HOME_SECTION_IDS = ['inicio', 'mais-vendidos', 'sobre', 'depoimentos', 'especialista', 'contato'] as const
 
 export type HomeSectionId = (typeof HOME_SECTION_IDS)[number]
+
+/** Seções sem link próprio no header herdam o destaque do item mais próximo */
+export const SCROLL_SECTION_TO_NAV: Record<HomeSectionId, NavLinkId> = {
+  inicio: 'inicio',
+  'mais-vendidos': 'mais-vendidos',
+  sobre: 'sobre',
+  depoimentos: 'sobre',
+  especialista: 'contato',
+  contato: 'contato',
+}
+
+export function getScrollSpyOffset(extra = 12): number {
+  const raw = getComputedStyle(document.documentElement).getPropertyValue('--site-top-height').trim()
+  const base = Number.parseFloat(raw)
+  return (Number.isFinite(base) ? base : 116) + extra
+}
+
+export function resolveNavLinkFromScrollSection(sectionId: string): NavLinkId | '' {
+  if (!sectionId) return 'inicio'
+  return SCROLL_SECTION_TO_NAV[sectionId as HomeSectionId] ?? ''
+}
 
 export function scrollToSection(id: string, behavior: ScrollBehavior = 'smooth') {
   const el = document.getElementById(id)

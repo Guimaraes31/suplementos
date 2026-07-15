@@ -3,7 +3,7 @@ import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import BrandLogo from '../BrandLogo/BrandLogo'
 import { useCart } from '../../context/CartContext'
-import { NAV_LINKS, HOME_SECTION_IDS, shopPath } from '../../config/navigation'
+import { NAV_LINKS, HOME_SECTION_IDS, resolveNavLinkFromScrollSection, shopPath } from '../../config/navigation'
 import { useScrollSpy } from '../../hooks/useScrollSpy'
 import './Navbar.css'
 
@@ -46,13 +46,11 @@ function MenuIcon({ open }: { open: boolean }) {
   )
 }
 
-function linkIsActive(pathname: string, hash: string, linkTo: string, scrollId: string) {
-  if (linkTo === '/') {
-    return pathname === '/' && (!hash || hash === '#inicio')
-  }
-  if (linkTo.startsWith('/#')) {
-    const section = linkTo.slice(2)
-    return pathname === '/' && (hash === `#${section}` || scrollId === section)
+function linkIsActive(pathname: string, linkId: string, linkTo: string, scrollId: string) {
+  if (linkTo === '/' || linkTo.startsWith('/#')) {
+    if (pathname !== '/') return false
+    const activeNavId = resolveNavLinkFromScrollSection(scrollId || 'inicio')
+    return activeNavId === linkId
   }
   if (linkTo === '/loja') {
     return pathname === '/loja' || pathname.startsWith('/produto/')
@@ -66,13 +64,13 @@ function linkIsActive(pathname: string, hash: string, linkTo: string, scrollId: 
 export default function Navbar() {
   const { itemCount, openDrawer } = useCart()
   const navigate = useNavigate()
-  const { pathname, hash } = useLocation()
+  const { pathname } = useLocation()
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [searchValue, setSearchValue] = useState('')
 
   const onHome = pathname === '/'
-  const scrollId = useScrollSpy(onHome ? HOME_SECTION_IDS : [], 140)
+  const scrollId = useScrollSpy(onHome ? HOME_SECTION_IDS : [])
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 16)
@@ -87,7 +85,7 @@ export default function Navbar() {
 
   useEffect(() => {
     setMenuOpen(false)
-  }, [pathname, hash])
+  }, [pathname])
 
   const handleSearch = (e: FormEvent) => {
     e.preventDefault()
@@ -105,7 +103,7 @@ export default function Navbar() {
 
         <nav className="navbar__nav" aria-label="Navegação principal">
           {NAV_LINKS.map((link) => {
-            const active = linkIsActive(pathname, hash, link.to, scrollId)
+            const active = linkIsActive(pathname, link.id, link.to, scrollId)
             return (
               <NavLink
                 key={link.id}
@@ -191,7 +189,7 @@ export default function Navbar() {
               <div className="navbar__mobile-menu-inner">
                 <span className="navbar__mobile-eyebrow">Menu</span>
                 {NAV_LINKS.map((link, i) => {
-                  const active = linkIsActive(pathname, hash, link.to, scrollId)
+                  const active = linkIsActive(pathname, link.id, link.to, scrollId)
                   return (
                     <motion.div
                       key={link.id}

@@ -37,6 +37,7 @@ export default function SafeImage({
       decoding="async"
       sizes={sizes}
       fetchPriority={fetchPriority}
+      draggable={false}
       onLoad={() => setLoaded(true)}
       onError={() => {
         if (currentSrc !== images.fallback) {
