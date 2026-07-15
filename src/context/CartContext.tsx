@@ -102,7 +102,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       return [...prev, productToCartItem(product, 1, variant)]
     })
 
-    setToast({ message: `${displayName} adicionado ao carrinho`, image: product.image })
+    setToast({ message: displayName, image: product.image })
     if (sourceRect) {
       setFlyAnimation({ image: product.image, from: sourceRect })
     }
