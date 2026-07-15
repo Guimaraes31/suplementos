@@ -1,12 +1,15 @@
+import { lazy } from 'react'
 import HeroCarousel from '../components/HeroCarousel/HeroCarousel'
 import TrustBar from '../components/TrustBar/TrustBar'
-import MaisVendidos from '../components/MaisVendidos/MaisVendidos'
-import Benefits from '../components/Benefits/Benefits'
-import Testimonials from '../components/Testimonials/Testimonials'
-import WhatsAppCTA from '../components/WhatsAppCTA/WhatsAppCTA'
 import SectionDivider from '../components/SectionDivider/SectionDivider'
-import HomeShopTeaser from '../components/HomeShopTeaser/HomeShopTeaser'
+import DeferredMount from '../components/DeferredMount/DeferredMount'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
+
+const MaisVendidos = lazy(() => import('../components/MaisVendidos/MaisVendidos'))
+const HomeShopTeaser = lazy(() => import('../components/HomeShopTeaser/HomeShopTeaser'))
+const Benefits = lazy(() => import('../components/Benefits/Benefits'))
+const Testimonials = lazy(() => import('../components/Testimonials/Testimonials'))
+const WhatsAppCTA = lazy(() => import('../components/WhatsAppCTA/WhatsAppCTA'))
 
 export default function HomePage() {
   useDocumentTitle(
@@ -19,15 +22,25 @@ export default function HomePage() {
       <HeroCarousel />
       <TrustBar />
       <SectionDivider label="Mais Vendidos" />
-      <MaisVendidos />
+      <DeferredMount minHeight={380}>
+        <MaisVendidos />
+      </DeferredMount>
       <SectionDivider label="Loja" />
-      <HomeShopTeaser />
+      <DeferredMount minHeight={280}>
+        <HomeShopTeaser />
+      </DeferredMount>
       <SectionDivider />
-      <Benefits />
+      <DeferredMount minHeight={320}>
+        <Benefits />
+      </DeferredMount>
       <SectionDivider label="Como comprar" />
-      <Testimonials />
+      <DeferredMount minHeight={300}>
+        <Testimonials />
+      </DeferredMount>
       <SectionDivider label="Orientação" />
-      <WhatsAppCTA />
+      <DeferredMount minHeight={240}>
+        <WhatsAppCTA />
+      </DeferredMount>
     </>
   )
 }

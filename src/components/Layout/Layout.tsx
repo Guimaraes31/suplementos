@@ -3,12 +3,10 @@ import { useEffect } from 'react'
 import Navbar from '../Navbar/Navbar'
 import AnnouncementBar from '../AnnouncementBar/AnnouncementBar'
 import Footer from '../Footer/Footer'
-import CartDrawer from '../CartDrawer/CartDrawer'
-import CheckoutModal from '../CheckoutModal/CheckoutModal'
 import CartToast from '../CartToast/CartToast'
-import FlyToCart from '../FlyToCart/FlyToCart'
 import ScrollProgress from '../ScrollProgress/ScrollProgress'
 import WhatsAppFab from '../WhatsAppFab/WhatsAppFab'
+import DeferredCartUi from './DeferredCartUi'
 
 export default function Layout() {
   const { pathname, hash } = useLocation()
@@ -38,10 +36,8 @@ export default function Layout() {
         <Outlet />
       </main>
       <Footer />
-      <CartDrawer />
-      <CheckoutModal />
+      <DeferredCartUi />
       <CartToast />
-      <FlyToCart />
       <WhatsAppFab />
     </>
   )

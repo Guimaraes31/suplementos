@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import Shop from '../components/Shop/Shop'
-import { useShopFilter } from '../context/ShopFilterContext'
+import { ShopFilterProvider, useShopFilter } from '../context/ShopFilterContext'
 import type { ProductCategory, SortOption } from '../cms/types'
 import { PRODUCT_CATEGORIES } from '../cms/types'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
@@ -20,7 +20,7 @@ function parseSort(value: string | null): SortOption {
   return 'relevancia'
 }
 
-export default function ShopPage() {
+function ShopPageContent() {
   const [searchParams] = useSearchParams()
   const { applyFilters } = useShopFilter()
 
@@ -48,5 +48,13 @@ export default function ShopPage() {
       </div>
       <Shop />
     </section>
+  )
+}
+
+export default function ShopPage() {
+  return (
+    <ShopFilterProvider>
+      <ShopPageContent />
+    </ShopFilterProvider>
   )
 }

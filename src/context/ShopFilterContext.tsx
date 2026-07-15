@@ -7,7 +7,7 @@ import {
   type ReactNode,
 } from 'react'
 import type { ProductCategory, SortOption } from '../cms/types'
-import { priceBounds } from '../cms/products'
+import { SHOP_PRICE_BOUNDS } from '../config/shop'
 
 export interface ShopFilterState {
   category: ProductCategory | 'Todos'
@@ -32,8 +32,8 @@ interface ShopFilterContextValue {
 
 const defaultFilters = (): ShopFilterState => ({
   category: 'Todos',
-  minPrice: priceBounds.min,
-  maxPrice: priceBounds.max,
+  minPrice: SHOP_PRICE_BOUNDS.min,
+  maxPrice: SHOP_PRICE_BOUNDS.max,
   sort: 'relevancia',
   query: '',
 })

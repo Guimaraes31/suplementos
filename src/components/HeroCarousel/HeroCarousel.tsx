@@ -44,6 +44,7 @@ export default function HeroCarousel() {
   const [playing, setPlaying] = useState(true)
   const [progressKey, setProgressKey] = useState(0)
   const [reduceMotion, setReduceMotion] = useState(false)
+  const [compactLoad, setCompactLoad] = useState(false)
   const touchX = useRef<number | null>(null)
 
   const goTo = useCallback((i: number) => {
@@ -78,6 +79,21 @@ export default function HeroCarousel() {
     document.addEventListener('visibilitychange', onVis)
     return () => document.removeEventListener('visibilitychange', onVis)
   }, [])
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 767px)')
+    const update = () => setCompactLoad(mq.matches)
+    update()
+    mq.addEventListener('change', update)
+    return () => mq.removeEventListener('change', update)
+  }, [])
+
+  useEffect(() => {
+    if (!compactLoad) return
+    const next = slides[(index + 1) % slides.length]
+    const img = new Image()
+    img.src = next.image
+  }, [compactLoad, index])
 
   return (
     <section
@@ -116,7 +132,9 @@ export default function HeroCarousel() {
       <div className="hero-carousel__viewport">
         {slides.map((slide, i) => {
           const active = i === index
-          const shouldLoad = active || Math.abs(i - index) <= 1 || i === 0
+          const shouldLoad = compactLoad
+            ? active
+            : active || Math.abs(i - index) <= 1 || i === 0
           return (
             <article
               key={slide.id}
@@ -197,9 +215,10 @@ function BannerSlideView({
             alt={slide.alt}
             width={1824}
             height={560}
+            sizes="100vw"
             loading={active || isFirst ? 'eager' : 'lazy'}
             decoding="async"
-            fetchPriority={active || isFirst ? 'high' : 'auto'}
+            fetchPriority={active || isFirst ? 'high' : 'low'}
           />
         ) : (
           <div className="hero-slide__banner-placeholder" aria-hidden="true" />

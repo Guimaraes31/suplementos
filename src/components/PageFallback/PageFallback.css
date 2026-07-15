@@ -1,0 +1,22 @@
+.page-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  padding: var(--space-xl);
+}
+
+.page-fallback__spinner {
+  width: 28px;
+  height: 28px;
+  border: 2px solid var(--color-border);
+  border-top-color: var(--color-gold);
+  border-radius: 50%;
+  animation: pageFallbackSpin 0.7s linear infinite;
+}
+
+@keyframes pageFallbackSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
